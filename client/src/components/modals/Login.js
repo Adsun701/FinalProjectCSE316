@@ -2,7 +2,7 @@ import React, { useState } 	from 'react';
 import { LOGIN } 			from '../../cache/mutations';
 import { useMutation }    	from '@apollo/client';
 
-import { WModal, WMHeader, WMMain, WMFooter, WButton, WInput } from 'wt-frontend';
+import { WModal, WMHeader, WMMain, WMFooter, WButton, WInput, WRow, WCol } from 'wt-frontend';
 
 const Login = (props) => {
 	const [input, setInput] = useState({ email: '', password: '' });
@@ -47,7 +47,7 @@ const Login = (props) => {
 
 			{
 				loading ? <WMMain />
-					: <WMMain className="main-login-modal">
+					: <WMMain className="main-login-modal modal-main">
 
 						<WInput className="modal-input" onBlur={updateInput} name='email' labelAnimation="up" barAnimation="solid" labelText="Email Address" wType="outlined" inputType='text' />
 						<div className="modal-spacer">&nbsp;</div>
@@ -63,9 +63,18 @@ const Login = (props) => {
 					</WMMain>
 			}
 			<WMFooter>
-				<WButton className="modal-button" onClick={handleLogin} span clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
-					Login
-				</WButton>
+			<WRow>
+				<WCol size="6">
+					<WButton className="modal-button" onClick={handleLogin} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+						Login
+					</WButton>
+				</WCol>
+				<WCol size="6">
+					<WButton className="modal-button" onClick={() => props.setShowCreate(false)} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+						Cancel
+					</WButton>
+				</WCol>
+			</WRow>
 			</WMFooter>
 		</WModal>
 	);
