@@ -232,3 +232,8 @@ html, body {
 .sidebar-buttons:hover {
     background-color: darken($background-color, 50%);
 }
+
+.welcome-text {
+    color: var(--warm-white);
+    font-size: 1.5rem;
+}
