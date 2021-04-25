@@ -5,7 +5,7 @@ import { useMutation }    	from '@apollo/client';
 import { WModal, WMHeader, WMMain, WButton, WInput, WRow, WCol } from 'wt-frontend';
 
 const CreateAccount = (props) => {
-	const [input, setInput] = useState({ email: '', password: '', firstName: '', lastName: '' });
+	const [input, setInput] = useState({ email: '', password: '', name: ''});
 	const [loading, toggleLoading] = useState(false);
 	const [Register] = useMutation(REGISTER);
 
@@ -44,23 +44,17 @@ const CreateAccount = (props) => {
 	return (
 		<WModal className="signup-modal" visible={true}>
 			<WMHeader className="modal-header" onClose={() => props.setShowCreate(false)}>
-				Sign Up
+				Create A New Account
 			</WMHeader>
 
 			{
 				loading ? <WMMain />
-					: <WMMain>
+					: <WMMain className="modal-main">
 						<WRow className="modal-col-gap signup-modal">
 							<WCol size="6">
 								<WInput 
-									className="" onBlur={updateInput} name="firstName" labelAnimation="up" 
-									barAnimation="solid" labelText="First Name" wType="outlined" inputType="text" 
-								/>
-							</WCol>
-							<WCol size="6">
-								<WInput 
-									className="" onBlur={updateInput} name="lastName" labelAnimation="up" 
-									barAnimation="solid" labelText="Last Name" wType="outlined" inputType="text" 
+									className="" onBlur={updateInput} name="name" labelAnimation="up" 
+									barAnimation="solid" labelText="Name" wType="outlined" inputType="text" 
 								/>
 							</WCol>
 						</WRow>
@@ -77,9 +71,18 @@ const CreateAccount = (props) => {
 						/>
 					</WMMain>
 			}
-			<WButton className="modal-button" onClick={handleCreateAccount} span clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded" color="primary">
-				Submit
-			</WButton>
+			<WRow>
+				<WCol size="6">
+					<WButton className="modal-button" onClick={handleCreateAccount} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+						Create Account
+					</WButton>
+				</WCol>
+				<WCol size="6">
+					<WButton className="modal-button" onClick={() => props.setShowCreate(false)} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+						Cancel
+					</WButton>
+				</WCol>
+			</WRow>
 		</WModal>
 	);
 }

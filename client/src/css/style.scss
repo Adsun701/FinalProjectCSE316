@@ -43,6 +43,8 @@
 	--blue-gray: #7e8084;
 	--darkblue-gray: #2b2e36;
     --warm-black: #322d2d;
+    --pure-red: #ff0000;
+    --pure-black: #000000;
 }
 
 html, body {
@@ -192,7 +194,8 @@ html, body {
 }
 
 .modal-header {
-    color: $text-color;
+    background-color: var(--pure-red);
+    color: var(--warm-white);
     font-size: 28px;
 }
 
@@ -202,9 +205,13 @@ html, body {
     font-weight: bold;
 }
 
+.modal-button {
+    background-color:rgb(200, 200, 200);
+}
+
 .modal-button:hover {
     color: $modal-button-hover;
-    background-color: $sidebar-background-color;
+    background-color: rgb(225, 225, 225);
 }
 
 .cancel-button {
@@ -236,4 +243,12 @@ html, body {
 .welcome-text {
     color: var(--warm-white);
     font-size: 1.5rem;
+}
+
+.signup-modal {
+    background-color: var(--pure-black);
+}
+
+.modal-main {
+    background-color: var(--pure-black);
 }
