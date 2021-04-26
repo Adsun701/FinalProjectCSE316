@@ -216,7 +216,7 @@ module.exports = {
                 else
                     listRegions = JSON.parse(state);
             }
-			const updated = await Todolist.updateOne({_id: mapId}, { regions: listRegions })
+			const updated = await Map.updateOne({_id: mapId}, { regions: listRegions })
 			if(updated) return (listRegions);
 			// return old ordering if reorder was unsuccessful
 			listRegions = found.regions;

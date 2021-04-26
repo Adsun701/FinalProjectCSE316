@@ -2,8 +2,8 @@ export class jsTPS_Transaction {
     doTransaction() {};
     undoTransaction () {};
 }
-/*  Handles list name changes, or any other top level details of a todolist that may be added   */
-export class UpdateListField_Transaction extends jsTPS_Transaction {
+/*  Handles map name changes, or any other top level details of a map that may be added   */
+export class UpdateMapField_Transaction extends jsTPS_Transaction {
     constructor(_id, field, prev, update, callback) {
         super();
         this.prev = prev;

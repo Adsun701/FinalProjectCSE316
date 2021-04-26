@@ -31,7 +31,7 @@ const Login = (props) => {
 		}
 		if (data) {
 			props.fetchUser();
-			props.refetchTodos();
+			props.refetchMaps();
 			toggleLoading(false);
 			props.setShowLogin(false);
 			props.toggleListSelected(false);
