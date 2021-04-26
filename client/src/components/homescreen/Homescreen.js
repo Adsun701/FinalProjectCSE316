@@ -36,7 +36,7 @@ const Homescreen = (props) => {
 					<ul>
 						<NavbarOptions
 							fetchUser={props.fetchUser} auth={auth} 
-							setShowCreate={setShowCreate} setShowLogin={setShowLogin}
+							setShowCreate={setShowCreate} setShowLogin={setShowLogin} userName={props.user.name}
 						/>
 					</ul>
 				</WNavbar>
