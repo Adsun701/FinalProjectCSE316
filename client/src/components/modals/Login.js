@@ -31,10 +31,8 @@ const Login = (props) => {
 		}
 		if (data) {
 			props.fetchUser();
-			props.refetchMaps();
 			toggleLoading(false);
 			props.setShowLogin(false);
-			props.toggleListSelected(false);
 		};
 	};
 
@@ -70,7 +68,7 @@ const Login = (props) => {
 					</WButton>
 				</WCol>
 				<WCol size="6">
-					<WButton className="modal-button" onClick={() => props.setShowCreate(false)} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+					<WButton className="modal-button" onClick={() => props.setShowLogin(false)} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
 						Cancel
 					</WButton>
 				</WCol>
