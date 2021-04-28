@@ -256,3 +256,25 @@ html, body {
 .login-modal {
     background-color: var(--pure-black);
 }
+
+.map-list {
+    background: var(--pure-black);
+}
+
+.map-list-header {
+    background-color: var(--pure-red);
+    color: var(--warm-white);
+    font-size: 28px;
+}
+
+.map-list-main {
+    background-color: var(--light-pink);
+    color: var(--warm-white);
+    font-size: 28px;
+}
+
+.map-list-side {
+    background-color: var(--warm-white);
+    color: var(--warm-white);
+    font-size: 28px;
+}

@@ -32,7 +32,7 @@ const Homescreen = (props) => {
 		toggleShowLogin(false);
 		toggleShowCreate(false);
 		toggleShowUpdate(!showUpdate);
-	}
+	};
 
 	return (
 		<WLayout wLayout="header-lside">
@@ -64,11 +64,11 @@ const Homescreen = (props) => {
 			</WLMain>
 
 			{
-				showCreate && (<CreateAccount fetchUser={props.fetchUser} setShowCreate={setShowCreate} />)
+				showCreate && (<CreateAccount fetchUser={props.fetchUser} setShowCreate={setShowCreate} history={props.history}/>)
 			}
 
 			{
-				showLogin && (<Login fetchUser={props.fetchUser} setShowLogin={setShowLogin}/>)
+				showLogin && (<Login fetchUser={props.fetchUser} setShowLogin={setShowLogin} history={props.history}/>)
 			}
 
 			{
