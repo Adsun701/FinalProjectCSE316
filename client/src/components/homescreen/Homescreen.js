@@ -3,6 +3,7 @@ import Logo 							from '../navbar/Logo';
 import NavbarOptions 					from '../navbar/NavbarOptions';
 import Login 							from '../modals/Login';
 import CreateAccount 					from '../modals/CreateAccount';
+import UpdateAccount					from '../modals/Update';
 import { WNavbar, WNavItem } 			from 'wt-frontend';
 import { WLayout, WLHeader, WLMain } from 'wt-frontend';
 import world from './world.jpg';
@@ -11,18 +12,27 @@ const Homescreen = (props) => {
 
 	const [showLogin, toggleShowLogin] 		= useState(false);
 	const [showCreate, toggleShowCreate] 	= useState(false);
+	const [showUpdate, toggleShowUpdate]	= useState(false);
 
 	const auth = props.user === null ? false : true;
 
 	const setShowLogin = () => {
 		toggleShowCreate(false);
+		toggleShowUpdate(false);
 		toggleShowLogin(!showLogin);
 	};
 
 	const setShowCreate = () => {
 		toggleShowLogin(false);
+		toggleShowUpdate(false);
 		toggleShowCreate(!showCreate);
 	};
+
+	const setShowUpdate = () => {
+		toggleShowLogin(false);
+		toggleShowCreate(false);
+		toggleShowUpdate(!showUpdate);
+	}
 
 	return (
 		<WLayout wLayout="header-lside">
@@ -36,7 +46,8 @@ const Homescreen = (props) => {
 					<ul>
 						<NavbarOptions
 							fetchUser={props.fetchUser} auth={auth} 
-							setShowCreate={setShowCreate} setShowLogin={setShowLogin} userName={props.user.name}
+							setShowCreate={setShowCreate} setShowLogin={setShowLogin}
+							setShowUpdate={setShowUpdate} userName={props.user === null ? '' : props.user.name}
 						/>
 					</ul>
 				</WNavbar>
@@ -58,6 +69,10 @@ const Homescreen = (props) => {
 
 			{
 				showLogin && (<Login fetchUser={props.fetchUser} setShowLogin={setShowLogin}/>)
+			}
+
+			{
+				showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} userId={props.user._id}/>)
 			}
 
 		</WLayout>

@@ -18,7 +18,7 @@ const LoggedIn = (props) => {
     return (
         <>
             <WNavItem hoverAnimation="lighten">
-                <WButton className="account-status navbar-options" onClick={() => {}} wType="texted" hoverAnimation="text-primary"> 
+                <WButton className="account-status navbar-options" onClick={props.setShowUpdate} wType="texted" hoverAnimation="text-primary"> 
                     {props.userName}
                 </WButton>
             </WNavItem>
@@ -54,7 +54,8 @@ const NavbarOptions = (props) => {
         <>
             {
                 props.auth === false ? <LoggedOut setShowLogin={props.setShowLogin} setShowCreate={props.setShowCreate} />
-                : <LoggedIn fetchUser={props.fetchUser} setActiveList={props.setActiveList} logout={props.logout} userName={props.userName} />
+                : <LoggedIn fetchUser={props.fetchUser} setActiveList={props.setActiveList} logout={props.logout} userName={props.userName}
+                    setShowUpdate={props.setShowUpdate}/>
             }
         </>
 

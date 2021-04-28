@@ -71,6 +71,27 @@ module.exports = {
 			return user;
 		},
 		/** 
+			@param 	 {object} args - account info to be updated (_id, email, password, name)
+			@returns {object} the user object or an object with an error message
+		**/
+		update: async (_, args) => {
+			console.log("covfefe");
+			const {_id, email, password, name } = args;
+			const userId = new ObjectId(_id);
+			const userToUpdate = User.findOne({_id: userId});
+			
+			const alreadyRegistered = await User.findOne({email: email});
+			if(alreadyRegistered) {
+				console.log('User with that email already registered.');
+				return userToUpdate;
+			}
+
+			const hashed = await bcrypt.hash(password, 10);
+
+			const updated = await User.updateOne({_id: userId}, {name: name, email: email, password: hashed});
+			return userToUpdate;
+		},
+		/** 
 			@param 	 {object} res - response object containing the current access/refresh tokens  
 			@returns {boolean} true 
 		**/
