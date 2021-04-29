@@ -16,6 +16,7 @@ import { useHistory } from 'react-router-dom';
 const MapScreen = (props) => {
 
 	let maps							    = [];
+	const [currentMapId, setCurrentMapId]   = useState('');
 	const [showDelete, toggleShowDelete] 	= useState(false);
 	const [showLogin, toggleShowLogin] 		= useState(false);
 	const [showCreate, toggleShowCreate] 	= useState(false);
@@ -39,6 +40,8 @@ const MapScreen = (props) => {
 			owner: props.user._id
 		}
 		const { data } = await AddMap({ variables: { map: map }, refetchQueries: [{ query: GET_DB_MAPS }] });
+		if (data) return data["addMap"];
+		else return "Unable to add map.";
 	};
 
 	const deleteMap = async (_id) => {
@@ -63,10 +66,11 @@ const MapScreen = (props) => {
 		toggleShowCreate(!showCreate);
 	};
 
-	const setShowDelete = () => {
+	const setShowDelete = async (_id) => {
 		toggleShowCreate(false);
 		toggleShowLogin(false);
 		toggleShowDelete(!showDelete);
+		setCurrentMapId(_id);
 	};
 
 	const setShowUpdate = () => {
@@ -98,7 +102,7 @@ const MapScreen = (props) => {
 			/></WLMain>
 
 			{
-				showDelete && (<Delete deleteMap={deleteMap}/>)
+				showDelete && (<Delete deleteMap={deleteMap} setShowDelete={setShowDelete} currentMapId={currentMapId}/>)
 			}
 
 			{

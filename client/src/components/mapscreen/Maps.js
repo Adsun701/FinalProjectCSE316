@@ -14,7 +14,7 @@ const Maps = (props) => {
 				Your Maps
 			</WLHeader>
             <WLMain className="map-list-main">
-                <MapList maps={props.maps}></MapList>
+                <MapList maps={props.maps} setShowDelete={props.setShowDelete}></MapList>
             </WLMain>
             <WLSide className="map-list-side">
                 {

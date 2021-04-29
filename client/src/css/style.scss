@@ -269,7 +269,7 @@ html, body {
 
 .map-list-main {
     background-color: var(--light-pink);
-    color: var(--warm-white);
+    color: var(--warm-black);
     font-size: 28px;
 }
 
@@ -277,4 +277,8 @@ html, body {
     background-color: var(--warm-white);
     color: var(--warm-white);
     font-size: 28px;
+}
+
+.map-entry-buttons {
+    color: $text-color;
 }

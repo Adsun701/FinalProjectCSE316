@@ -1,5 +1,5 @@
 import React, { useState }  from 'react';
-import { WNavItem, WInput } from 'wt-frontend';
+import { WNavItem, WButton } from 'wt-frontend';
 
 const MapEntry = (props) => {
 
@@ -16,6 +16,9 @@ const MapEntry = (props) => {
                     {props.name}
                 </div>
             }
+            <WButton className="map-entry-buttons" onClick={() => {props.setShowDelete(props._id);}} wType="texted">
+                <i className="material-icons">close</i>
+            </WButton>
         </WNavItem>
     );
 };
