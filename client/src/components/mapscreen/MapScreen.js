@@ -10,6 +10,7 @@ import * as mutations 					from '../../cache/mutations';
 import { useApolloClient, useMutation, useQuery } 		from '@apollo/client';
 import { WNavbar, WNavItem } 	from 'wt-frontend';
 import { WLayout, WLHeader, WLMain, } from 'wt-frontend';
+import { useHistory } from 'react-router-dom';
 
 
 const MapScreen = (props) => {
@@ -32,6 +33,8 @@ const MapScreen = (props) => {
 	if(data) { maps = data.getAllMaps; }
 
 	const auth = props.user === null ? false : true;
+	let history = useHistory();
+	if (!auth) history.push("/welcome");
 
 	const createNewMap = async () => {
 		let map = {

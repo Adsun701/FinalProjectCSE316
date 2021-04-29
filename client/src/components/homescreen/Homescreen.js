@@ -6,6 +6,7 @@ import CreateAccount 					from '../modals/CreateAccount';
 import UpdateAccount					from '../modals/Update';
 import { WNavbar, WNavItem } 			from 'wt-frontend';
 import { WLayout, WLHeader, WLMain } from 'wt-frontend';
+import { useHistory } from 'react-router-dom';
 import world from './world.jpg';
 
 const Homescreen = (props) => {
@@ -15,6 +16,8 @@ const Homescreen = (props) => {
 	const [showUpdate, toggleShowUpdate]	= useState(false);
 
 	const auth = props.user === null ? false : true;
+	let history = useHistory();
+	if (auth) history.push("/maps");
 
 	const setShowLogin = () => {
 		toggleShowCreate(false);

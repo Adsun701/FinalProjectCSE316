@@ -16,7 +16,9 @@ const App = () => {
 	if(loading) { console.log(loading); }
 	if(data) { 
 		let { getCurrentUser } = data;
-		if(getCurrentUser !== null) { user = getCurrentUser; }
+		if(getCurrentUser !== null) {
+			user = getCurrentUser;
+		}
     }
 
 	return(
