@@ -23,7 +23,7 @@ const regionSchema = new Schema(
 			required: false
 		},
         landmarks: [String],
-        regions: [this],
+        regions: [String],
 	},
     { timestamps: true }
 );

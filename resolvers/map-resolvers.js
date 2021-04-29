@@ -58,15 +58,14 @@ module.exports = {
 		addMap: async (_, args) => {
 			const { map } = args;
 			const objectId = new ObjectId();
-			const { id, name, description, regions } = map;
+			const { name, owner, regions } = map;
 			const newMap = new Map({
 				_id: objectId,
-				id: id,
 				name: name,
-				description: description,
+				owner: owner,
 				regions: regions
 			});
-			const updated = newList.save();
+			const updated = newMap.save();
 			if(updated) return objectId;
 			else return ('Could not add map');
 		},

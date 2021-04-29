@@ -4,7 +4,7 @@ import NavbarOptions 					from '../navbar/NavbarOptions';
 import Login 							from '../modals/Login';
 import Delete 							from '../modals/Delete';
 import CreateAccount 					from '../modals/CreateAccount'
-import Maps								from '../modals/Maps';
+import Maps								from './Maps';
 import { GET_DB_MAPS } 				from '../../cache/queries';
 import * as mutations 					from '../../cache/mutations';
 import { useApolloClient, useMutation, useQuery } 		from '@apollo/client';
@@ -24,9 +24,6 @@ const MapScreen = (props) => {
 	const [DeleteMap] 				= useMutation(mutations.DELETE_MAP);
 	const [AddMap] 					= useMutation(mutations.ADD_MAP);
 
-	const client = useApolloClient();
-
-
 	const { loading, error, data, refetch } = useQuery(GET_DB_MAPS);
 	if(loading) { console.log(loading, 'loading'); }
 	if(error) { console.log(error, 'error'); }
@@ -38,7 +35,6 @@ const MapScreen = (props) => {
 
 	const createNewMap = async () => {
 		let map = {
-			_id: '',
 			name: 'Untitled',
 			owner: props.user._id,
 			regions: [],
@@ -99,7 +95,7 @@ const MapScreen = (props) => {
 				</WNavbar>
 			</WLHeader>
 			<WLMain><Maps
-				maps={maps}
+				setShowDelete={setShowDelete} maps={maps}
 			/></WLMain>
 
 			{

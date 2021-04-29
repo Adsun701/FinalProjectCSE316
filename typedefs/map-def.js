@@ -5,24 +5,24 @@ const typeDefs = gql `
 	type Map {
 		_id: String!
 		name: String!
-		description: String!
-		regions: [Region]
+		owner: String!
+		regions: [String]
 	}
 	type Region {
 		_id: String!
-		description: String!
 		capital: String!
 		leader: String!
         flag: String!
 		landmarks: [String]
-        regions: [Region]
+        regions: [String]
+		parentRegion: String
 	}
 	extend type Query {
 		getAllMaps: [Map]
 		getMapById(_id: String!): Map 
 	}
 	extend type Mutation {
-		addRegion(region: RegionInput!, _id: String!, index: Int!): String
+		addRegion(region: RegionInput!, _id: String!, parentRegion: String!): String
 		addMap(map: MapInput!): String
 		deleteRegion(_id: String!): [Region]		
 		deleteMap(_id: String!): Boolean
@@ -32,7 +32,6 @@ const typeDefs = gql `
 		sortRegions(_id: String!, direction: Int!, state: String!, field: String!): [Region]
 	}
 	input MapInput {
-		_id: String
 		name: String
 		description: String
 		regions: [RegionInput]
