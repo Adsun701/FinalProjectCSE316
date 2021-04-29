@@ -3,7 +3,8 @@ import Logo 							from '../navbar/Logo';
 import NavbarOptions 					from '../navbar/NavbarOptions';
 import Login 							from '../modals/Login';
 import Delete 							from '../modals/Delete';
-import CreateAccount 					from '../modals/CreateAccount'
+import CreateAccount 					from '../modals/CreateAccount';
+import CreateMap						from '../modals/CreateMap'
 import Maps								from './Maps';
 import { GET_DB_MAPS } 				from '../../cache/queries';
 import * as mutations 					from '../../cache/mutations';
@@ -21,6 +22,7 @@ const MapScreen = (props) => {
 	const [showLogin, toggleShowLogin] 		= useState(false);
 	const [showCreate, toggleShowCreate] 	= useState(false);
     const [showUpdate, toggleShowUpdate]    = useState(false);
+	const [showMap, toggleShowMap]			= useState(false);
 
 	const [DeleteMap] 				= useMutation(mutations.DELETE_MAP);
 	const [AddMap] 					= useMutation(mutations.ADD_MAP);
@@ -34,9 +36,9 @@ const MapScreen = (props) => {
 	let history = useHistory();
 	if (!auth) history.push("/welcome");
 
-	const createNewMap = async () => {
+	const createNewMap = async (name) => {
 		let map = {
-			name: 'Untitled',
+			name: name,
 			owner: props.user._id
 		}
 		const { data } = await AddMap({ variables: { map: map }, refetchQueries: [{ query: GET_DB_MAPS }] });
@@ -57,18 +59,24 @@ const MapScreen = (props) => {
 	const setShowLogin = () => {
 		toggleShowDelete(false);
 		toggleShowCreate(false);
+		toggleShowUpdate(false);
+		toggleShowMap(false);
 		toggleShowLogin(!showLogin);
 	};
 
 	const setShowCreate = () => {
 		toggleShowDelete(false);
 		toggleShowLogin(false);
+		toggleShowUpdate(false);
+		toggleShowMap(false);
 		toggleShowCreate(!showCreate);
 	};
 
 	const setShowDelete = async (_id) => {
 		toggleShowCreate(false);
 		toggleShowLogin(false);
+		toggleShowUpdate(false);
+		toggleShowMap(false);
 		toggleShowDelete(!showDelete);
 		setCurrentMapId(_id);
 	};
@@ -76,8 +84,18 @@ const MapScreen = (props) => {
 	const setShowUpdate = () => {
 		toggleShowLogin(false);
 		toggleShowCreate(false);
+		toggleShowDelete(false);
+		toggleShowMap(false);
 		toggleShowUpdate(!showUpdate);
 	};
+
+	const setShowMap = () => {
+		toggleShowLogin(false);
+		toggleShowCreate(false);
+		toggleShowDelete(false);
+		toggleShowUpdate(false);
+		toggleShowMap(!showMap);
+	}
 
 	return (
 		<WLayout wLayout="header-lside">
@@ -98,7 +116,7 @@ const MapScreen = (props) => {
 				</WNavbar>
 			</WLHeader>
 			<WLMain><Maps
-				setShowDelete={setShowDelete} maps={maps} createNewMap={createNewMap}
+				setShowDelete={setShowDelete} maps={maps} createNewMap={createNewMap} setShowMap={setShowMap}
 			/></WLMain>
 
 			{
@@ -111,6 +129,9 @@ const MapScreen = (props) => {
 
 			{
 				showLogin && (<Login fetchUser={props.fetchUser} refetchMaps={refetch} setShowLogin={setShowLogin}/>)
+			}
+			{
+				showMap && (<CreateMap createNewMap={createNewMap} setShowMap={setShowMap}/>)
 			}
 
 		</WLayout>

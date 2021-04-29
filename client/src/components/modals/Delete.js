@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { WModal, WMHeader, WMMain, WButton } from 'wt-frontend';
 
@@ -12,7 +12,7 @@ const Delete = (props) => {
     return (
         <WModal visible={true} className="delete-modal">
             <WMHeader className="modal-header" onClose={() => props.setShowDelete(false)}>
-                Delete List?
+                Delete Map?
 			</WMHeader>
 
             <WMMain>

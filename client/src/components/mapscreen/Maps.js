@@ -1,7 +1,6 @@
-import React, { useState } 	from 'react';
-import { useMutation }    	from '@apollo/client';
-import  MapList             from './maplist/MapList';
-import world from '../homescreen/world.jpg';
+import React 				from 'react';
+import MapList             	from './maplist/MapList';
+import world 				from '../homescreen/world.jpg';
 
 import { WLayout, WLHeader, WLMain, WLSide, WButton } from 'wt-frontend';
 
@@ -24,7 +23,7 @@ const Maps = (props) => {
 						</div>
 					</div>
 				}
-                <WButton className="modal-button" onClick={() => {props.createNewMap();}} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+                <WButton className="modal-button" onClick={() => {props.setShowMap();}} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
                     Create New Map
                 </WButton>
             </WLSide>

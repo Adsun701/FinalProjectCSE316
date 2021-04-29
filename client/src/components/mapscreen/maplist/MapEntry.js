@@ -1,4 +1,4 @@
-import React, { useState }  from 'react';
+import React  from 'react';
 import { WNavItem, WButton } from 'wt-frontend';
 
 const MapEntry = (props) => {
