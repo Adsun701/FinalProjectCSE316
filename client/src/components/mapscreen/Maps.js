@@ -24,7 +24,7 @@ const Maps = (props) => {
 						</div>
 					</div>
 				}
-                <WButton className="modal-button" onClick={() => {}} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+                <WButton className="modal-button" onClick={() => {props.createNewMap();}} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
                     Create New Map
                 </WButton>
             </WLSide>

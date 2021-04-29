@@ -33,8 +33,7 @@ const typeDefs = gql `
 	}
 	input MapInput {
 		name: String
-		description: String
-		regions: [RegionInput]
+		owner: String
 	}
 	input RegionInput {
 		_id: String

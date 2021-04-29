@@ -11,7 +11,7 @@ const mapSchema = new Schema(
 			type: String,
 			required: true
 		},
-		description: {
+		owner: {
 			type: String,
 			required: true
 		},

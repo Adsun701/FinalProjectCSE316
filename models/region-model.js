@@ -6,10 +6,6 @@ const regionSchema = new Schema(
 			type: ObjectId,
 			required: true
 		},
-		description: {
-			type: String,
-			required: true
-		},
 		capital: {
 			type: String,
 			required: false
@@ -24,6 +20,10 @@ const regionSchema = new Schema(
 		},
         landmarks: [String],
         regions: [String],
+		parentRegion: {
+			type: String,
+			required: true
+		}
 	},
     { timestamps: true }
 );

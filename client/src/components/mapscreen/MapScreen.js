@@ -7,7 +7,7 @@ import CreateAccount 					from '../modals/CreateAccount'
 import Maps								from './Maps';
 import { GET_DB_MAPS } 				from '../../cache/queries';
 import * as mutations 					from '../../cache/mutations';
-import { useApolloClient, useMutation, useQuery } 		from '@apollo/client';
+import { useMutation, useQuery } 		from '@apollo/client';
 import { WNavbar, WNavItem } 	from 'wt-frontend';
 import { WLayout, WLHeader, WLMain, } from 'wt-frontend';
 import { useHistory } from 'react-router-dom';
@@ -36,8 +36,7 @@ const MapScreen = (props) => {
 	const createNewMap = async () => {
 		let map = {
 			name: 'Untitled',
-			owner: props.user._id,
-			regions: [],
+			owner: props.user._id
 		}
 		const { data } = await AddMap({ variables: { map: map }, refetchQueries: [{ query: GET_DB_MAPS }] });
 	};
@@ -95,7 +94,7 @@ const MapScreen = (props) => {
 				</WNavbar>
 			</WLHeader>
 			<WLMain><Maps
-				setShowDelete={setShowDelete} maps={maps}
+				setShowDelete={setShowDelete} maps={maps} createNewMap={createNewMap}
 			/></WLMain>
 
 			{
