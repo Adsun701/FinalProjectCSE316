@@ -8,7 +8,7 @@ const MapList = (props) => {
                 props.maps &&
                 props.maps.map(map => (
                     <MapEntry
-                        _id={map._id} key={map._id} name={map.name} setShowDelete={props.setShowDelete}
+                        _id={map._id} key={map._id} name={map.name} setShowDelete={props.setShowDelete} setShowRename={props.setShowRename}
                     />
                 ))
             }

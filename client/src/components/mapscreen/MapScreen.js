@@ -4,7 +4,8 @@ import NavbarOptions 					from '../navbar/NavbarOptions';
 import Login 							from '../modals/Login';
 import Delete 							from '../modals/Delete';
 import CreateAccount 					from '../modals/CreateAccount';
-import CreateMap						from '../modals/CreateMap'
+import CreateMap						from '../modals/CreateMap';
+import Rename 							from '../modals/Rename';
 import Maps								from './Maps';
 import { GET_DB_MAPS } 				from '../../cache/queries';
 import * as mutations 					from '../../cache/mutations';
@@ -18,14 +19,17 @@ const MapScreen = (props) => {
 
 	let maps							    = [];
 	const [currentMapId, setCurrentMapId]   = useState('');
+	const [currentMapName, setCurrentMapName] = useState('');
 	const [showDelete, toggleShowDelete] 	= useState(false);
 	const [showLogin, toggleShowLogin] 		= useState(false);
 	const [showCreate, toggleShowCreate] 	= useState(false);
     const [showUpdate, toggleShowUpdate]    = useState(false);
 	const [showMap, toggleShowMap]			= useState(false);
+	const [showRename, toggleShowRename]	= useState(false);
 
 	const [DeleteMap] 				= useMutation(mutations.DELETE_MAP);
 	const [AddMap] 					= useMutation(mutations.ADD_MAP);
+	const [RenameMap]				= useMutation(mutations.RENAME_MAP);
 
 	const { loading, error, data, refetch } = useQuery(GET_DB_MAPS);
 	if(loading) { console.log(loading, 'loading'); }
@@ -46,6 +50,16 @@ const MapScreen = (props) => {
 		else return "Unable to add map.";
 	};
 
+	const renameMap = async (name, _id) => {
+		let map = {
+			name: name,
+			owner: props.user._id
+		}
+		const { data } = await RenameMap({ variables: { map: map, _id : _id }, refetchQueries: [{ query: GET_DB_MAPS }] });
+		if (data) return data["renameMap"];
+		else return "Unable to rename map.";
+	};
+
 	const deleteMap = async (_id) => {
 		DeleteMap({ variables: { _id: _id }, refetchQueries: [{ query: GET_DB_MAPS }] });
 		refetch();
@@ -61,6 +75,7 @@ const MapScreen = (props) => {
 		toggleShowCreate(false);
 		toggleShowUpdate(false);
 		toggleShowMap(false);
+		toggleShowRename(false);
 		toggleShowLogin(!showLogin);
 	};
 
@@ -69,6 +84,7 @@ const MapScreen = (props) => {
 		toggleShowLogin(false);
 		toggleShowUpdate(false);
 		toggleShowMap(false);
+		toggleShowRename(false);
 		toggleShowCreate(!showCreate);
 	};
 
@@ -77,6 +93,7 @@ const MapScreen = (props) => {
 		toggleShowLogin(false);
 		toggleShowUpdate(false);
 		toggleShowMap(false);
+		toggleShowRename(false);
 		toggleShowDelete(!showDelete);
 		setCurrentMapId(_id);
 	};
@@ -86,6 +103,7 @@ const MapScreen = (props) => {
 		toggleShowCreate(false);
 		toggleShowDelete(false);
 		toggleShowMap(false);
+		toggleShowRename(false);
 		toggleShowUpdate(!showUpdate);
 	};
 
@@ -94,7 +112,19 @@ const MapScreen = (props) => {
 		toggleShowCreate(false);
 		toggleShowDelete(false);
 		toggleShowUpdate(false);
+		toggleShowRename(false);
 		toggleShowMap(!showMap);
+	}
+
+	const setShowRename = async (_id, name) => {
+		toggleShowLogin(false);
+		toggleShowCreate(false);
+		toggleShowDelete(false);
+		toggleShowUpdate(false);
+		toggleShowMap(false);
+		toggleShowRename(!showRename);
+		setCurrentMapId(_id);
+		setCurrentMapName(name);
 	}
 
 	return (
@@ -116,7 +146,7 @@ const MapScreen = (props) => {
 				</WNavbar>
 			</WLHeader>
 			<WLMain><Maps
-				setShowDelete={setShowDelete} maps={maps} createNewMap={createNewMap} setShowMap={setShowMap}
+				maps={maps} createNewMap={createNewMap} setShowDelete={setShowDelete}  setShowMap={setShowMap} setShowRename={setShowRename}
 			/></WLMain>
 
 			{
@@ -132,6 +162,9 @@ const MapScreen = (props) => {
 			}
 			{
 				showMap && (<CreateMap createNewMap={createNewMap} setShowMap={setShowMap}/>)
+			}
+			{
+				showRename && (<Rename renameMap={renameMap} setShowRename={setShowRename} currentMapId={currentMapId} currentMapName={currentMapName}/>)
 			}
 
 		</WLayout>

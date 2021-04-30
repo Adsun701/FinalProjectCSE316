@@ -97,15 +97,16 @@ module.exports = {
 			else return false;
 		},
 		/** 
-		 	@param 	 {object} args - a map objectID, field, and the update value
+		 	@param 	 {object} args - a map input object, and the _id of the map.
 			@returns {boolean} true on successful update, false on failure
 		**/
-		updateMapField: async (_, args) => {
-			const { field, value, _id } = args;
+		renameMap: async (_, args) => {
+			const { map, _id } = args;
 			const objectId = new ObjectId(_id);
-			const updated = await Map.updateOne({_id: objectId}, {[field]: value});
-			if(updated) return value;
-			else return "";
+			const newName = map["name"];
+			const updated = await Map.updateOne({_id: objectId}, {name: newName});
+			if(updated) return newName;
+			else return "unable to rename map.";
 		},
 		/** 
 			@param	 {object} args - a map objectID, an region objectID, field, and

@@ -15,7 +15,7 @@ const Delete = (props) => {
                 Delete Map?
 			</WMHeader>
 
-            <WMMain>
+            <WMMain className="delete-modal-main">
                 <WButton className="modal-button cancel-button" onClick={() => props.setShowDelete(false)} wType="texted">
                     Cancel
 				</WButton>

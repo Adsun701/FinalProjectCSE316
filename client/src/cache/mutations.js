@@ -112,8 +112,8 @@ export const DELETE_MAP = gql`
 	}
 `;
 
-export const UPDATE_MAP_FIELD = gql`
-	mutation UpdateMapField($_id: String!, $field: String!, $value: String!) {
-		updateMapField(_id: $_id, field: $field, value: $value)
+export const RENAME_MAP = gql`
+	mutation RenameMap($map: MapInput!, $_id: String!) {
+		renameMap(map: $map, _id: $_id)
 	}
 `;
