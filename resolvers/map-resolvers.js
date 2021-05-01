@@ -30,38 +30,19 @@ module.exports = {
 			if(map) return map;
 			else return ({});
 		},
+		/** 
+		 	@param 	 {object} args - a region id
+			@returns {object} a region on success and an empty object on failure
+		**/
+		getRegionById: async (_, args) => {
+			const { _id } = args;
+			const objectId = new ObjectId(_id);
+			const region = await Region.findOne({_id: objectId});
+			if(region) return region;
+			else return ({});
+		}
 	},
 	Mutation: {
-		/** 
-		 	@param 	 {object} args - a region object and a map id for parent.
-			@returns {string} the objectID of the region or an error message
-		**/
-		addRegion: async(_, args) => {
-			const { region, parent } = args;
-			const regionId = new ObjectId();
-			const found = await Map.findOne({_id: parent});
-			if(!found) return ('Map not found');
-			const newRegion = new Region({
-				_id: regionId,
-				name: region.name,
-				capital: region.capital,
-				leader: region.leader,
-				flag: region.flag,
-				landmarks: region.landmarks,
-				regions: region.regions,
-				parent: region.parent,
-				map: region.map,
-				ancestry: region.ancestry
-			})
-			let listRegions = found.regions;
-		        if(index < 0) listRegions.push(region);
-			else listRegions.splice(index, 0, region);
-			
-			const updated = await Map.updateOne({_id: parent}, { regions: listRegions });
-
-			if(updated) return (newRegion._id);
-			else return ('Could not add region');
-		},
 		/** 
 		 	@param 	 {object} args - an empty map object
 			@returns {string} the objectID of the map or an error message
@@ -79,21 +60,6 @@ module.exports = {
 			const updated = newMap.save();
 			if(updated) return objectId;
 			else return ('Could not add map');
-		},
-		/** 
-		 	@param 	 {object} args - a region objectID and its map objectID
-			@returns {array} the updated region array on success or the initial 
-							 array on failure
-		**/
-		deleteRegion: async (_, args) => {
-			const  { regionId, mapId } = args;
-			const found = await Map.findOne({_id: mapId});
-			let listRegions = found.regions;
-			listRegions = listRegions.filter(region => region._id.toString() !== regionId && !region.ancestry.includes(regionId));
-			const updated = await Map.updateOne({_id: mapId}, { regions: listRegions })
-			if(updated) return (listRegions);
-			else return (found.regions);
-
 		},
 		/** 
 		 	@param 	 {object} args - a map objectID 
@@ -117,6 +83,54 @@ module.exports = {
 			const updated = await Map.updateOne({_id: objectId}, {name: newName});
 			if(updated) return newName;
 			else return "unable to rename map.";
+		},
+		/** 
+		 	@param 	 {object} args - a region object.
+			@returns {string} the objectID of the region or an error message
+		**/
+		addRegion: async(_, args) => {
+			const { region } = args;
+			const regionId = new ObjectId();
+			const parent = region.parent;
+			const found = await Map.findOne({_id: parent});
+			if(!found) return ('Map not found');
+			const newRegion = new Region({
+				_id: regionId,
+				name: region.name,
+				capital: region.capital,
+				leader: region.leader,
+				flag: region.flag,
+				landmarks: region.landmarks,
+				regions: region.regions,
+				parent: region.parent,
+				map: region.map,
+				ancestry: region.ancestry
+			})
+			let listRegions = found.regions;
+		    listRegions.push(regionId);
+			
+			const updated = await Map.updateOne({_id: parent}, { regions: listRegions });
+
+			if(updated) {
+				newRegion.save();
+				return (newRegion._id);
+			}
+			else return ('Could not add region');
+		},
+		/** 
+		 	@param 	 {object} args - a region objectID and its map objectID
+			@returns {array} the updated region array on success or the initial 
+							 array on failure
+		**/
+		deleteRegion: async (_, args) => {
+			const  { regionId, mapId } = args;
+			const found = await Map.findOne({_id: mapId});
+			let listRegions = found.regions;
+			listRegions = listRegions.filter(region => region._id.toString() !== regionId && !region.ancestry.includes(regionId));
+			const updated = await Map.updateOne({_id: mapId}, { regions: listRegions })
+			if(updated) return (listRegions);
+			else return (found.regions);
+
 		},
 		/** 
 			@param	 {object} args - a map objectID, an region objectID, field, and

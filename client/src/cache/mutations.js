@@ -39,8 +39,8 @@ export const LOGOUT = gql`
 `;
 
 export const ADD_REGION = gql`
-	mutation AddRegion($region: RegionInput!, $parent: String!) {
-	  	addRegion(region: $region, parent: $parent)
+	mutation AddRegion($region: RegionInput!) {
+	  	addRegion(region: $region)
 	}
 `;
 

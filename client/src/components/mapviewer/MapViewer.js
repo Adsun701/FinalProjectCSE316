@@ -8,12 +8,12 @@ import { useMutation, useQuery } 		from '@apollo/client';
 import { WButton, WRow, WCol, WNavbar, WNavItem } 	from 'wt-frontend';
 import { WLayout, WLHeader, WLMain, } from 'wt-frontend';
 import { useHistory, useParams } from 'react-router-dom';
+import TableContents from './TableContents';
 
 
 const MapViewer = (props) => {
 
 	let {_id} = useParams();
-	console.log(_id);
 	let map = null;
 
 	const auth = props.user === null ? false : true;
@@ -27,7 +27,6 @@ const MapViewer = (props) => {
 	if(loading) { console.log(loading, 'loading'); }
 	if(error) { console.log(error, 'error'); }
 	if(data) { 
-		console.log(data);
 		let maps = data.getAllMaps;
 		maps.forEach(m => {
 			if (m._id === _id) map = m;
@@ -131,6 +130,11 @@ const MapViewer = (props) => {
 						Region Name: {currentMapName}
 					</WCol>
 				</WRow>
+				<br></br>
+				<TableContents map={map}
+                deleteRegion={deleteRegion}
+                //updateRegionField={updateRegionField}
+				></TableContents>
 			</WLMain>
 
 			{
