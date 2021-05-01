@@ -1,6 +1,7 @@
 import React 			from 'react';
 import Homescreen 		from './components/homescreen/Homescreen';
 import MapScreen 		from './components/mapscreen/MapScreen';
+import MapViewer 		from './components/mapviewer/MapViewer';
 import { useQuery } 	from '@apollo/client';
 import * as queries 	from './cache/queries';
 import { jsTPS } 		from './utils/jsTPS';
@@ -8,7 +9,7 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
  
 const App = () => {
 	let user = null;
-    let transactionStack = new jsTPS();
+    let tps = new jsTPS();
 	
     const { loading, error, data, refetch } = useQuery(queries.GET_DB_USER);
 
@@ -40,6 +41,16 @@ const App = () => {
 					name="maps" 
 					render={() => 
 						<MapScreen fetchUser={refetch} user={user}/>
+					} 
+				/>
+				<Route/>
+			</Switch>
+			<Switch>
+				<Route 
+					path="/map/:_id" 
+					name="map/:_id" 
+					render={() => 
+						<MapViewer fetchUser={refetch} user={user} tps={tps}/>
 					} 
 				/>
 				<Route/>

@@ -13,6 +13,7 @@ import { useMutation, useQuery } 		from '@apollo/client';
 import { WNavbar, WNavItem } 	from 'wt-frontend';
 import { WLayout, WLHeader, WLMain, } from 'wt-frontend';
 import { useHistory } from 'react-router-dom';
+import UpdateAccount from '../modals/Update';
 
 
 const MapScreen = (props) => {
@@ -165,6 +166,9 @@ const MapScreen = (props) => {
 			}
 			{
 				showRename && (<Rename renameMap={renameMap} setShowRename={setShowRename} currentMapId={currentMapId} currentMapName={currentMapName}/>)
+			}
+			{
+				showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} />)
 			}
 
 		</WLayout>

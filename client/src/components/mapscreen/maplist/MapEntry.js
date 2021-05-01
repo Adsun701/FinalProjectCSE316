@@ -1,9 +1,12 @@
 import React  from 'react';
 import { WNavItem, WRow, WCol, WButton } from 'wt-frontend';
+import { useHistory } from 'react-router-dom';
 
 const MapEntry = (props) => {
 
     const entryStyle = 'map-entry';
+
+    let history = useHistory();
     
     // TODO: Make sure when clicked the entry moves into the route "region viewer" to view the map's regions.
     return (
@@ -14,7 +17,7 @@ const MapEntry = (props) => {
             <WCol size='6'>
                 <WNavItem>
                     {
-                        <div className='map-text'>
+                        <div className='map-text' onClick={() => {history.push("/map/" + props._id, { _id: props._id })}}>
                             {props.name}
                         </div>
                     }

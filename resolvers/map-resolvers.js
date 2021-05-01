@@ -1,5 +1,6 @@
 const ObjectId = require('mongoose').Types.ObjectId;
 const Map = require('../models/map-model');
+const Region = require('../models/region-model');
 
 // The underscore param, "_", is a wildcard that can represent any value;
 // here it is a stand-in for the parent parameter, which can be read about in
@@ -32,23 +33,33 @@ module.exports = {
 	},
 	Mutation: {
 		/** 
-		 	@param 	 {object} args - a map id and an empty region object
+		 	@param 	 {object} args - a region object and a map id for parent.
 			@returns {string} the objectID of the region or an error message
 		**/
 		addRegion: async(_, args) => {
-			const { _id, region, index } = args;
-			const mapId = new ObjectId(_id);
-			const objectId = new ObjectId();
-			const found = await Map.findOne({_id: mapId});
+			const { region, parent } = args;
+			const regionId = new ObjectId();
+			const found = await Map.findOne({_id: parent});
 			if(!found) return ('Map not found');
-			if(region._id === '') region._id = objectId;
+			const newRegion = new Region({
+				_id: regionId,
+				name: region.name,
+				capital: region.capital,
+				leader: region.leader,
+				flag: region.flag,
+				landmarks: region.landmarks,
+				regions: region.regions,
+				parent: region.parent,
+				map: region.map,
+				ancestry: region.ancestry
+			})
 			let listRegions = found.regions;
 		        if(index < 0) listRegions.push(region);
 			else listRegions.splice(index, 0, region);
 			
-			const updated = await Map.updateOne({_id: mapId}, { regions: listRegions });
+			const updated = await Map.updateOne({_id: parent}, { regions: listRegions });
 
-			if(updated) return (region._id);
+			if(updated) return (newRegion._id);
 			else return ('Could not add region');
 		},
 		/** 
@@ -70,16 +81,15 @@ module.exports = {
 			else return ('Could not add map');
 		},
 		/** 
-		 	@param 	 {object} args - a map objectID and region objectID
+		 	@param 	 {object} args - a region objectID and its map objectID
 			@returns {array} the updated region array on success or the initial 
 							 array on failure
 		**/
 		deleteRegion: async (_, args) => {
-			const  { _id, regionId } = args;
-			const mapId = new ObjectId(_id);
+			const  { regionId, mapId } = args;
 			const found = await Map.findOne({_id: mapId});
 			let listRegions = found.regions;
-			listRegions = listRegions.filter(region => region._id.toString() !== regionId);
+			listRegions = listRegions.filter(region => region._id.toString() !== regionId && !region.ancestry.includes(regionId));
 			const updated = await Map.updateOne({_id: mapId}, { regions: listRegions })
 			if(updated) return (listRegions);
 			else return (found.regions);

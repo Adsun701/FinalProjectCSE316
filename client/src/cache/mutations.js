@@ -39,8 +39,8 @@ export const LOGOUT = gql`
 `;
 
 export const ADD_REGION = gql`
-	mutation AddRegion($region: RegionInput!, $_id: String!, $parentRegion: String!) {
-	  	addRegion(region: $region, _id: $_id, parentRegion: $parentRegion)
+	mutation AddRegion($region: RegionInput!, $parent: String!) {
+	  	addRegion(region: $region, parent: $parent)
 	}
 `;
 
@@ -53,7 +53,9 @@ export const DELETE_REGION = gql`
 			flag
 			landmarks
 			regions
-			parentRegion
+			parent
+			map
+			ancestry
 		}
 	}
 `;
@@ -67,7 +69,7 @@ export const UPDATE_REGION_FIELD = gql`
 			flag
 			landmarks
 			regions
-			parentRegion
+			parent
 		}
 	}
 `;
@@ -81,7 +83,7 @@ export const REORDER_REGIONS = gql`
 			flag
 			landmarks
 			regions
-			parentRegion
+			parent
 		}
 	}
 `;
@@ -95,7 +97,7 @@ export const SORT_REGIONS = gql`
 			flag
 			landmarks
 			regions
-			parentRegion
+			parent
 		}
 	}
 `;
