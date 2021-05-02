@@ -33,9 +33,9 @@ const MapViewer = (props) => {
 		});
 	}
 
-	const [currentMapId, setCurrentMapId]   			= useState(_id);
-	const [currentMapName, setCurrentMapName] 			= useState(map === null ? '' : map.name);
-    const [currentMapRegions, setCurrentMapRegions] 	= useState(map === null ? [] : map.regions);
+	const currentMapId 									= _id;
+	const currentMapName 								= (map === null ? '' : map.name);
+    const currentMapRegions								= (map === null ? [] : map.regions);
 	const [currentRegionId, setCurrentRegionId] 		= useState('');
 	const [showDeleteRegion, toggleShowDeleteRegion] 	= useState(false);
     const [showUpdate, toggleShowUpdate]    			= useState(false);
@@ -67,14 +67,12 @@ const MapViewer = (props) => {
 	};
 
 	/**
-	const updateRegionField = async (name, _id) => {
-		let map = {
-			name: name,
-			owner: props.user._id
-		}
-		const { data } = await RenameMap({ variables: { map: map, _id : _id }, refetchQueries: [{ query: GET_DB_MAPS }] });
-		if (data) return data["renameMap"];
-		else return "Unable to rename map.";
+	const editRegion = async (regionID, field, value, prev) => {
+		let mapID = currentMapId.;
+		let transaction = new EditRegion_Transaction(mapID, regionID, field, prev, value, UpdateRegionField);
+		props.tps.addTransaction(transaction);
+		tpsRedo();
+
 	};
 	*/
 	

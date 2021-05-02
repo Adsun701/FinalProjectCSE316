@@ -39,21 +39,21 @@ const TableEntry = (props) => {
         toggleCapitalEdit(false);
         const newCapital = e.target.value ? e.target.value : 'N/A';
         const prevCapital = capital;
-        props.editItem(region._id, 'capital', newCapital, prevCapital);
+        props.editRegion(region._id, 'capital', newCapital, prevCapital);
     };
 
     const handleLeaderEdit = (e) => {
         toggleLeaderEdit(false);
         const newLeader = e.target.value ? e.target.value : 'N/A';
         const prevLeader = leader;
-        props.editItem(region._id, 'leader', newLeader, prevLeader);
+        props.editRegion(region._id, 'leader', newLeader, prevLeader);
     };
 
     const handleFlagEdit = (e) => {
         toggleFlagEdit(false);
         const newFlag = e.target.value ? e.target.value : 'N/A';
         const prevFlag = flag;
-        props.editItem(region._id, 'flag', newFlag, prevFlag);
+        props.editRegion(region._id, 'flag', newFlag, prevFlag);
     };
 
     return (

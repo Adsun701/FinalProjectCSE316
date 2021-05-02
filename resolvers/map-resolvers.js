@@ -49,6 +49,7 @@ module.exports = {
 		**/
 		addMap: async (_, args) => {
 			const { map } = args;
+			// new object id.
 			const objectId = new ObjectId();
 			const { name, owner, regions } = map;
 			const newMap = new Map({
@@ -57,6 +58,7 @@ module.exports = {
 				owner: owner,
 				regions: regions
 			});
+			// save new map into a collection.
 			const updated = newMap.save();
 			if(updated) return objectId;
 			else return ('Could not add map');
@@ -69,7 +71,11 @@ module.exports = {
 			const { _id } = args;
 			const objectId = new ObjectId(_id);
 			const deleted = await Map.deleteOne({_id: objectId});
-			if (deleted) return true;
+			if (deleted) {
+				// delete all regions that have the matching map id.
+				await Region.deleteMany(region => region.map === _id);
+				return true;
+			}
 			else return false;
 		},
 		/** 
@@ -80,6 +86,7 @@ module.exports = {
 			const { map, _id } = args;
 			const objectId = new ObjectId(_id);
 			const newName = map["name"];
+			// update map with new name.
 			const updated = await Map.updateOne({_id: objectId}, {name: newName});
 			if(updated) return newName;
 			else return "unable to rename map.";
@@ -90,7 +97,9 @@ module.exports = {
 		**/
 		addRegion: async(_, args) => {
 			const { region } = args;
+			// new object id for region.
 			const regionId = new ObjectId();
+			// set parent of region.
 			const parent = region.parent;
 			const found = await Map.findOne({_id: parent});
 			if(!found) return ('Map not found');
@@ -134,20 +143,15 @@ module.exports = {
 		},
 		/** 
 			@param	 {object} args - a map objectID, an region objectID, field, and
-									 update value. Flag is used to interpret the completed 
-									 field,as it uses a boolean instead of a string
+									 update value.
 			@returns {array} the updated region array on success, or the initial region array on failure
 		**/
 		updateRegionField: async (_, args) => {
-			const { _id, regionId, field,  flag } = args;
+			const { _id, regionId, field } = args;
 			let { value } = args
 			const mapId = new ObjectId(_id);
 			const found = await Map.findOne({_id: mapId});
 			let listRegions = found.regions;
-			if(flag === 1) {
-				if(value === 'complete') { value = true; }
-				if(value === 'incomplete') { value = false; }
-			}
 			listRegions.map(region => {
 				if(region._id.toString() === regionId) {	
 					
