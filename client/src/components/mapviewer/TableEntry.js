@@ -6,12 +6,9 @@ import { GET_DB_REGION } 				from '../../cache/queries';
 const TableEntry = (props) => {
 
     let newRegion = null;
-    console.log(props);
-    const { loading, error, data, refetch } = useQuery(GET_DB_REGION, { variables: {_id: props.regionId} });
-	if(loading) { console.log(loading, 'loading'); }
-	if(error) { console.log(error, 'error'); }
-	if(data) { 
-        console.log(data);
+    const {data} = useQuery(GET_DB_REGION, { variables: {_id: props.regionId} });
+    console.log(data);
+	if(data) {
 		newRegion = data.getRegionById;
         console.log(newRegion);
 	}

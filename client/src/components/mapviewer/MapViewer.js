@@ -2,7 +2,7 @@ import React, { useState } 	from 'react';
 import Logo 							from '../navbar/Logo';
 import NavbarOptions 					from '../navbar/NavbarOptions';
 import UpdateAccount 					from '../modals/Update';
-import { GET_DB_MAPS } 				from '../../cache/queries';
+import { GET_DB_MAPS, GET_DB_REGION } 				from '../../cache/queries';
 import * as mutations 					from '../../cache/mutations';
 import { useMutation, useQuery } 		from '@apollo/client';
 import { WButton, WRow, WCol, WNavbar, WNavItem } 	from 'wt-frontend';
@@ -14,7 +14,9 @@ import TableContents from './TableContents';
 const MapViewer = (props) => {
 
 	let {_id} = useParams();
-	let map = null;
+
+	// this can either be a map or a region.
+	let newParent = null;
 
 	const auth = props.user === null ? false : true;
 
@@ -23,19 +25,29 @@ const MapViewer = (props) => {
 		history.push("/welcome");
 	}
 
-    const { loading, error, data, refetch } = useQuery(GET_DB_MAPS);
-	if(loading) { console.log(loading, 'loading'); }
-	if(error) { console.log(error, 'error'); }
+	// check maps.
+    let {data, refetch} = useQuery(GET_DB_MAPS);
 	if(data) { 
 		let maps = data.getAllMaps;
 		maps.forEach(m => {
-			if (m._id === _id) map = m;
+			if (m._id === _id) {
+				newParent = m;
+			}
 		});
 	}
 
-	const currentMapId 									= _id;
-	const currentMapName 								= (map === null ? '' : map.name);
-    const currentMapRegions								= (map === null ? [] : map.regions);
+	// check regions.
+	data = useQuery(GET_DB_REGION, { variables: {_id: _id} })['data'];
+	if (data) {
+		if (newParent === null ) newParent = data.getRegionById;
+	}
+	console.log(newParent);
+
+	const parent 										= (newParent ? newParent : null);
+	const currentParentId 								= _id;
+	const currentMapId 									= (parent && parent.map ? parent.map : _id);
+	const currentParentName 							= (parent === null ? '' : parent.name);
+    const currentParentRegions							= (parent === null ? [] : parent.regions);
 	const [currentRegionId, setCurrentRegionId] 		= useState('');
 	const [showDeleteRegion, toggleShowDeleteRegion] 	= useState(false);
     const [showUpdate, toggleShowUpdate]    			= useState(false);
@@ -52,9 +64,9 @@ const MapViewer = (props) => {
 			flag: "N/A",
 			landmarks: [],
 			regions: [],
-			parent: currentMapId,
+			parent: currentParentId,
 			map: currentMapId,
-			ancestry: [currentMapId]
+			ancestry: (!parent.map ? [currentParentId] : [...parent.ancestry, currentParentId] )
 		}
 		const { data } = await AddRegion({ variables: { region: region } });
 		if (data) return data["addRegion"];
@@ -62,13 +74,13 @@ const MapViewer = (props) => {
 	};
 
 	const deleteRegion = async (_id) => {
-		DeleteRegion({ variables: { _id: _id, parent: currentMapId} });
+		DeleteRegion({ variables: { _id: _id, map: currentMapId} });
 		refetch();
 	};
 
 	/**
 	const editRegion = async (regionID, field, value, prev) => {
-		let mapID = currentMapId.;
+		let mapID = currentParentId.;
 		let transaction = new EditRegion_Transaction(mapID, regionID, field, prev, value, UpdateRegionField);
 		props.tps.addTransaction(transaction);
 		tpsRedo();
@@ -125,11 +137,11 @@ const MapViewer = (props) => {
 						</WButton>
 					</WCol>
 					<WCol className="map-name" size='6'>
-						Region Name: {currentMapName}
+						Region Name: {currentParentName}
 					</WCol>
 				</WRow>
 				<br></br>
-				<TableContents map={map}
+				<TableContents parent={parent}
                 deleteRegion={deleteRegion}
                 //updateRegionField={updateRegionField}
 				></TableContents>
@@ -137,7 +149,7 @@ const MapViewer = (props) => {
 
 			{
 				showDeleteRegion && (<DeleteRegion deleteRegion={deleteRegion} setShowDeleteRegion={setShowDeleteRegion}
-					currentMapId={currentMapId} currentRegionId={currentRegionId}/>)
+					currentParentId={currentParentId} currentRegionId={currentRegionId}/>)
 			}
 			{
 				showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} />)
