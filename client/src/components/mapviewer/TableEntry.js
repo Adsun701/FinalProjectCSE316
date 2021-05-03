@@ -111,7 +111,7 @@ const TableEntry = (props) => {
                 {
                     <div className="table-text"
                         onClick={() => props.regionViewer(region._id) }
-                    >{region.landmarks}
+                    >{region.landmarks && region.landmarks.length > 0 ? region.landmarks[0] : "No Landmarks"}
                     </div>
                 }
             </WCol>
