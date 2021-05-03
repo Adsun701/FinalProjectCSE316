@@ -28,6 +28,7 @@ const MapViewer = (props) => {
 
 	// check maps.
     let {data, refetch} = useQuery(GET_DB_MAPS);
+	console.log(data);
 	if(data) { 
 		let maps = data.getAllMaps;
 		maps.forEach(m => {
@@ -37,11 +38,15 @@ const MapViewer = (props) => {
 		});
 	}
 
+	let refetchMaps = refetch
+
 	// check regions.
 	data = useQuery(GET_DB_REGION, { variables: {_id: _id} })['data'];
 	if (data) {
 		if (newParent === null ) newParent = data.getRegionById;
 	}
+
+	let refetchRegions = useQuery(GET_DB_REGION, { variables: {_id: _id} })['refetch'];
 
 	const parent 										= (newParent ? newParent : null);
 	const currentParentId 								= _id;
@@ -69,13 +74,16 @@ const MapViewer = (props) => {
 			ancestry: (!parent.map ? [currentParentId] : [...parent.ancestry, currentParentId] )
 		}
 		const { data } = await AddRegion({ variables: { region: region } });
+		refetchMaps();
+		refetchRegions();
 		if (data) return data["addRegion"];
 		else return "Unable to add region.";
 	};
 
 	const deleteRegion = async (_id) => {
 		DeleteRegion({ variables: { _id: _id, map: currentMapId} });
-		refetch();
+		refetchMaps();
+		refetchRegions();
 	};
 
 	/**
@@ -127,7 +135,7 @@ const MapViewer = (props) => {
 					<ul>
 						<NavbarOptions
                             fetchUser={props.fetchUser} auth={auth} 
-                            refetchMaps={refetch}
+                            refetchMaps={refetchMaps}
                             setShowUpdate={setShowUpdate} userName={props.user === null ? '' : props.user.name}
 						/>
 					</ul>
