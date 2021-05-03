@@ -2,6 +2,7 @@ import React 			from 'react';
 import Homescreen 		from './components/homescreen/Homescreen';
 import MapScreen 		from './components/mapscreen/MapScreen';
 import MapViewer 		from './components/mapviewer/MapViewer';
+import RegionViewer from './components/regionviewer/RegionViewer';
 import { useQuery } 	from '@apollo/client';
 import * as queries 	from './cache/queries';
 import { jsTPS } 		from './utils/jsTPS';
@@ -51,6 +52,16 @@ const App = () => {
 					name="map/:_id" 
 					render={() => 
 						<MapViewer fetchUser={refetch} user={user} tps={tps}/>
+					} 
+				/>
+				<Route/>
+			</Switch>
+			<Switch>
+				<Route 
+					path="/view/:_id" 
+					name="view/:_id" 
+					render={() => 
+						<RegionViewer fetchUser={refetch} user={user} tps={tps}/>
 					} 
 				/>
 				<Route/>

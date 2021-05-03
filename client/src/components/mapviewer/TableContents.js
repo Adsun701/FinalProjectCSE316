@@ -3,7 +3,6 @@ import TableEntry   from './TableEntry';
 
 const TableContents = (props) => {
 
-    console.log(props.parent);
     const entries = props.parent ? props.parent.regions : null;
     return (
         entries ? <div className=' table-entries container-primary'>
@@ -13,6 +12,7 @@ const TableContents = (props) => {
                         regionId={entry}
                         deleteRegion={props.deleteRegion}
                         //updateRegionField={props.updateRegionField}
+                        regionViewer={props.regionViewer}
                     />
                 ))
             }

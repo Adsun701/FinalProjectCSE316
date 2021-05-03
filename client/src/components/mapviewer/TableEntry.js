@@ -7,11 +7,7 @@ const TableEntry = (props) => {
 
     let newRegion = null;
     const {data} = useQuery(GET_DB_REGION, { variables: {_id: props.regionId} });
-    console.log(data);
-	if(data) {
-		newRegion = data.getRegionById;
-        console.log(newRegion);
-	}
+	if(data) newRegion = data.getRegionById;
 
     const region = newRegion ? newRegion : {};
 
@@ -109,6 +105,14 @@ const TableEntry = (props) => {
                             onClick={() => toggleFlagEdit(!editingFlag)}
                         >{flag}
                         </div>
+                }
+            </WCol>
+            <WCol size="3">
+                {
+                    <div className="table-text"
+                        onClick={() => props.regionViewer(region._id) }
+                    >{region.landmarks}
+                    </div>
                 }
             </WCol>
         </WRow>
