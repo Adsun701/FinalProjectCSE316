@@ -92,6 +92,11 @@ const MapViewer = (props) => {
 	const regionViewer = async (regionID) => {
 		history.push("/view/" + regionID, { _id: regionID });
 	}
+
+	// go to another region.
+	const goToRegion = async (regionID) => {
+		history.push("/map/" + regionID, { _id: regionID });
+	}
 	
 	/*
 		Since we only have 3 modals, this sort of hardcoding isnt an issue, if there
@@ -155,6 +160,7 @@ const MapViewer = (props) => {
 						deleteRegion={deleteRegion}
 						//updateRegionField={updateRegionField}
 						regionViewer={regionViewer}
+						goToRegion={goToRegion}
 					></TableContents>
 				</div>
 			</WLMain>

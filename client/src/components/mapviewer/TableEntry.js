@@ -60,7 +60,9 @@ const TableEntry = (props) => {
                             wType="outlined" barAnimation="solid" inputClass="table-input-class"
                         />
                         : <div className="table-text"
-                            onClick={() => toggleNameEdit(!editingName)}
+                            onClick={() => {}}
+                            //onClick={() => toggleNameEdit(!editingName)}
+                            onDoubleClick={() => {props.goToRegion(region._id)}}
                         >{name}
                         </div>
                 }
