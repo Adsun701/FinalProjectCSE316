@@ -132,7 +132,7 @@ const MapViewer = (props) => {
 				<WRow>
 					<WCol size='3'>
 						<WButton className="map-entry-buttons" onClick={() => {addNewRegion();}} wType="texted">
-							<i className="material-icons">add</i>
+							<i className="material-icons add-button">add</i>
 						</WButton>
 						<WButton className="map-entry-buttons" onClick={() => {}} wType="texted">
 							<i className="material-icons">undo</i>
