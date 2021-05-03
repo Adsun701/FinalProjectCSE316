@@ -47,7 +47,11 @@ const MapScreen = (props) => {
 			owner: props.user._id
 		}
 		const { data } = await AddMap({ variables: { map: map }, refetchQueries: [{ query: GET_DB_MAPS }] });
-		if (data) return data["addMap"];
+		if (data) {
+			let mapId = data['addMap'];
+			history.push("/map/" + mapId, { _id: mapId })
+			return mapId;
+		}
 		else return "Unable to add map.";
 	};
 
