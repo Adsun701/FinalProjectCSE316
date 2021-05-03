@@ -27,6 +27,7 @@ const MapScreen = (props) => {
     const [showUpdate, toggleShowUpdate]    = useState(false);
 	const [showMap, toggleShowMap]			= useState(false);
 	const [showRename, toggleShowRename]	= useState(false);
+	const [needsRefetch, toggleNeedsRefetch] = useState(true);
 
 	const [DeleteMap] 				= useMutation(mutations.DELETE_MAP);
 	const [AddMap] 					= useMutation(mutations.ADD_MAP);
@@ -36,6 +37,9 @@ const MapScreen = (props) => {
 	if(loading) { console.log(loading, 'loading'); }
 	if(error) { console.log(error, 'error'); }
 	if(data) { maps = data.getAllMaps; }
+	if (needsRefetch) {
+		refetch(); toggleNeedsRefetch(false);
+	}
 
 	const auth = props.user === null ? false : true;
 	let history = useHistory();
