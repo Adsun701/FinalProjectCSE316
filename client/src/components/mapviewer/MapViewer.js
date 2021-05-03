@@ -28,7 +28,6 @@ const MapViewer = (props) => {
 
 	// check maps.
     let {data, refetch} = useQuery(GET_DB_MAPS);
-	console.log(data);
 	if(data) { 
 		let maps = data.getAllMaps;
 		maps.forEach(m => {
