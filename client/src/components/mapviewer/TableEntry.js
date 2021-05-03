@@ -10,7 +10,7 @@ const TableEntry = (props) => {
 	if(data) newRegion = data.getRegionById;
 
     const region = newRegion ? newRegion : {};
-
+    const _id = region ? region._id : '';
     const name = region ? region.name : '';
     const capital = region ? region.capital : '';
     const leader = region ? region.leader : '';
@@ -25,28 +25,28 @@ const TableEntry = (props) => {
         toggleNameEdit(false);
         const newName = e.target.value ? e.target.value : 'N/A';
         const prevName = name;
-        props.editRegion(region._id, 'name', newName, prevName);
+        props.editRegion(_id, 'name', newName, prevName);
     };
 
     const handleCapitalEdit = (e) => {
         toggleCapitalEdit(false);
         const newCapital = e.target.value ? e.target.value : 'N/A';
         const prevCapital = capital;
-        props.editRegion(region._id, 'capital', newCapital, prevCapital);
+        props.editRegion(_id, 'capital', newCapital, prevCapital);
     };
 
     const handleLeaderEdit = (e) => {
         toggleLeaderEdit(false);
         const newLeader = e.target.value ? e.target.value : 'N/A';
         const prevLeader = leader;
-        props.editRegion(region._id, 'leader', newLeader, prevLeader);
+        props.editRegion(_id, 'leader', newLeader, prevLeader);
     };
 
     const handleFlagEdit = (e) => {
         toggleFlagEdit(false);
         const newFlag = e.target.value ? e.target.value : 'N/A';
         const prevFlag = flag;
-        props.editRegion(region._id, 'flag', newFlag, prevFlag);
+        props.editRegion(_id, 'flag', newFlag, prevFlag);
     };
 
     return (
@@ -62,7 +62,7 @@ const TableEntry = (props) => {
                         : <div className="table-text"
                             onClick={() => {}}
                             //onClick={() => toggleNameEdit(!editingName)}
-                            onDoubleClick={() => {props.goToRegion(region._id)}}
+                            onDoubleClick={() => {props.goToRegion(_id)}}
                         >{name}
                         </div>
                 }
@@ -112,7 +112,7 @@ const TableEntry = (props) => {
             <WCol size="3">
                 {
                     <div className="table-text"
-                        onClick={() => props.regionViewer(region._id) }
+                        onClick={() => props.regionViewer(_id) }
                     >{region.landmarks && region.landmarks.length > 0 ? region.landmarks[0] : "No Landmarks"}
                     </div>
                 }

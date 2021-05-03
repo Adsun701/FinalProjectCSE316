@@ -2,7 +2,6 @@ import React        from 'react';
 import TableEntry   from './TableEntry';
 
 const TableContents = (props) => {
-    console.log(props);
     const entries = props.parent ? props.parent.regions : null;
     return (
         entries ? <div className=' table-entries container-primary'>

@@ -3,17 +3,17 @@ const { gql } = require('apollo-server');
 
 const typeDefs = gql `
 	type Map {
-		_id: String!
-		name: String!
-		owner: String!
+		_id: String
+		name: String
+		owner: String
 		regions: [String]
 	}
 	type Region {
-		_id: String!
-		name: String!
-		capital: String!
-		leader: String!
-        flag: String!
+		_id: String
+		name: String
+		capital: String
+		leader: String
+        flag: String
 		landmarks: [String]
         regions: [String]
 		parent: String
@@ -23,7 +23,7 @@ const typeDefs = gql `
 	extend type Query {
 		getAllMaps: [Map]
 		getMapById(_id: String!): Map 
-		getRegionById(_id: String!): Region
+		getRegionById(_id: String): Region
 	}
 	extend type Mutation {
 		addRegion(region: RegionInput!): String

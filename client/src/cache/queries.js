@@ -22,7 +22,7 @@ export const GET_DB_MAPS = gql`
 `;
 
 export const GET_DB_REGION = gql`
-    query GetDBRegion($_id: String!) {
+    query GetDBRegion($_id: String) {
 		getRegionById(_id: $_id) {
 			_id
 			name
