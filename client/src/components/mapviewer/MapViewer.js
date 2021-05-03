@@ -177,7 +177,7 @@ const MapViewer = (props) => {
 					currentParentId={currentParentId} currentRegionId={currentRegionId}/>)
 			}
 			{
-				showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} />)
+				showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} userId={props.user._id}/>)
 			}
 
 		</WLayout>

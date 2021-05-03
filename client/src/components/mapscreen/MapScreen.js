@@ -172,7 +172,7 @@ const MapScreen = (props) => {
 				showRename && (<Rename renameMap={renameMap} setShowRename={setShowRename} currentMapId={currentMapId} currentMapName={currentMapName}/>)
 			}
 			{
-				showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} />)
+				showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} userId={props.user._id}/>)
 			}
 
 		</WLayout>
