@@ -37,12 +37,12 @@ const CreateMap = (props) => {
             </WMMain>
 			<WRow>
 				<WCol size="6">
-					<WButton className="modal-button" onClick={() => {handleCreateMap();}} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+					<WButton className="modal-button" onClick={() => {handleCreateMap();}} clickAnimation="ripple-light" hoveranimation="darken" shape="rounded">
 						Create New Map
 					</WButton>
 				</WCol>
 				<WCol size="6">
-					<WButton className="modal-button" onClick={() => props.setShowMap(false)} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+					<WButton className="modal-button" onClick={() => props.setShowMap(false)} clickAnimation="ripple-light" hoveranimation="darken" shape="rounded">
 						Cancel
 					</WButton>
 				</WCol>

@@ -22,13 +22,13 @@ const LoggedIn = (props) => {
 
     return (
         <>
-            <WNavItem hoverAnimation="lighten">
-                <WButton className="account-status navbar-options" onClick={props.setShowUpdate} wType="texted" hoverAnimation="text-primary"> 
+            <WNavItem hoveranimation="lighten">
+                <WButton className="account-status navbar-options" onClick={props.setShowUpdate} wType="texted" hoveranimation="text-primary"> 
                     {props.userName}
                 </WButton>
             </WNavItem>
-            <WNavItem hoverAnimation="lighten">
-                <WButton className="logged-status navbar-options" onClick={handleLogout} wType="texted" hoverAnimation="text-primary">
+            <WNavItem hoveranimation="lighten">
+                <WButton className="logged-status navbar-options" onClick={handleLogout} wType="texted" hoveranimation="text-primary">
                     Logout
                 </WButton>
             </WNavItem >
@@ -39,13 +39,13 @@ const LoggedIn = (props) => {
 const LoggedOut = (props) => {
     return (
         <>
-            <WNavItem hoverAnimation="lighten">
-                <WButton className="account-status navbar-options" onClick={props.setShowCreate} wType="texted" hoverAnimation="text-primary"> 
+            <WNavItem hoveranimation="lighten">
+                <WButton className="account-status navbar-options" onClick={props.setShowCreate} wType="texted" hoveranimation="text-primary"> 
                     Create Account
                 </WButton>
             </WNavItem>
-            <WNavItem hoverAnimation="lighten">
-                <WButton className="logged-status navbar-options" onClick={props.setShowLogin} wType="texted" hoverAnimation="text-primary">
+            <WNavItem hoveranimation="lighten">
+                <WButton className="logged-status navbar-options" onClick={props.setShowLogin} wType="texted" hoveranimation="text-primary">
                     Login
                 </WButton>
             </WNavItem>

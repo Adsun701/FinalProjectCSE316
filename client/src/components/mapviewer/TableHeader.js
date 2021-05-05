@@ -13,7 +13,7 @@ const TableHeader = (props) => {
         <WRow className="table-header">
             <WCol size="3">
                 <WButton onClick={() => {
-                    props.sortRegionsByName(props.nameAsc ? 1 : -1);
+                    props.sortRegions(props.nameAsc ? 1 : -1);
                     props.toggleNameAsc(!props.nameAsc);
                 }
                 } className='table-header-section' wType="texted" >Name</WButton>
@@ -21,7 +21,7 @@ const TableHeader = (props) => {
 
             <WCol size="2">
                 <WButton onClick={() => {
-                    props.sortItemsByDate(props.dateAsc ? 1 : -1);
+                    props.sortRegions(props.dateAsc ? 1 : -1);
                     props.toggleDateAsc(!props.dateAsc);
                 }
                 } className='table-header-section' wType="texted">Capital</WButton>
@@ -29,21 +29,21 @@ const TableHeader = (props) => {
 
             <WCol size="2">
                 <WButton onClick={() => {
-                    props.sortItemsByStatus(props.statusAsc ? 1 : -1);
+                    props.sortRegions(props.statusAsc ? 1 : -1);
                     props.toggleStatusAsc(!props.statusAsc);
                 }
                 } className='table-header-section' wType="texted" >Leader</WButton>
             </WCol>
             <WCol size="2">
                 <WButton onClick={() => {
-                    props.sortItemsByAssignedTo(props.assignedToAsc ? 1 : -1);
+                    props.sortRegions(props.assignedToAsc ? 1 : -1);
                     props.toggleAssignedToAsc(!props.assignedToAsc);
                 }
                 } className='table-header-section' wType="texted" >Flag</WButton>
             </WCol>
             <WCol size="3">
             <WButton onClick={() => {
-                    props.sortItemsByAssignedTo(props.assignedToAsc ? 1 : -1);
+                    props.sortRegions(props.assignedToAsc ? 1 : -1);
                     props.toggleAssignedToAsc(!props.assignedToAsc);
                 }
                 } className='table-header-section' wType="texted" >Landmarks</WButton>

@@ -23,7 +23,7 @@ const Maps = (props) => {
 						</div>
 					</div>
 				}
-                <WButton className="modal-button" onClick={() => {props.setShowMap();}} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+                <WButton className="modal-button" onClick={() => {props.setShowMap();}} clickAnimation="ripple-light" hoveranimation="darken" shape="rounded">
                     Create New Map
                 </WButton>
             </WLSide>

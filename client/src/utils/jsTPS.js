@@ -3,32 +3,8 @@ export class jsTPS_Transaction {
     undoTransaction () {};
 }
 
-/*  Handles item reordering */
-export class ReorderItems_Transaction extends jsTPS_Transaction {
-    constructor(listID, itemID, dir, callback) {
-        super();
-        this.listID = listID;
-        this.itemID = itemID;
-		this.dir = dir;
-		this.revDir = dir === 1 ? -1 : 1;
-		this.updateFunction = callback;
-	}
-
-    async doTransaction() {
-		const { data } = await this.updateFunction({ variables: { itemId: this.itemID, _id: this.listID, direction: this.dir }});
-		return data;
-    }
-
-    async undoTransaction() {
-		const {data} = await this.updateFunction({ variables: { itemId: this.itemID, _id: this.listID, direction: this.revDir }});
-		return data;
-
-    }
-    
-}
-
-/* Sorts items in list by description. */
-export class SortItemsByDesc_Transaction extends jsTPS_Transaction {
+/* Sorts regions in list. */
+export class SortRegions_Transaction extends jsTPS_Transaction {
     constructor(listID, dir, state, callback) {
         super();
         this.listID = listID;
@@ -47,84 +23,21 @@ export class SortItemsByDesc_Transaction extends jsTPS_Transaction {
     }
 }
 
-/* Sorts items in list by due_date. */
-export class SortItemsByDate_Transaction extends jsTPS_Transaction {
-    constructor(listID, dir, state, callback) {
-        super();
-        this.listID = listID;
-        this.dir = dir;
-        this.state = state;
-        this.updateFunction = callback;
-    }
-
-    async doTransaction() {
-        const { data } = await this.updateFunction({ variables: { _id: this.listID, direction: this.dir, state: this.state}});
-        return data;
-    }
-    async undoTransaction() {
-        const { data } = await this.updateFunction({ variables: { _id: this.listID, direction: 0, state: this.state}});
-        return data;
-    }
-}
-
-/* Sorts items in list by status. */
-export class SortItemsByStatus_Transaction extends jsTPS_Transaction {
-    constructor(listID, dir, state, callback) {
-        super();
-        this.listID = listID;
-        this.dir = dir;
-        this.state = state;
-        this.updateFunction = callback;
-    }
-
-    async doTransaction() {
-        const { data } = await this.updateFunction({ variables: { _id: this.listID, direction: this.dir, state: this.state}});
-        return data;
-    }
-    async undoTransaction() {
-        const { data } = await this.updateFunction({ variables: { _id: this.listID, direction: 0, state: this.state}});
-        return data;
-    }
-}
-
-/* Sorts items in list by assigned_to. */
-export class SortItemsByAssignedTo_Transaction extends jsTPS_Transaction {
-    constructor(listID, dir, state, callback) {
-        super();
-        this.listID = listID;
-        this.dir = dir;
-        this.state = state;
-        this.updateFunction = callback;
-    }
-
-    async doTransaction() {
-        const { data } = await this.updateFunction({ variables: { _id: this.listID, direction: this.dir, state: this.state}});
-        return data;
-    }
-    async undoTransaction() {
-        const { data } = await this.updateFunction({ variables: { _id: this.listID, direction: 0, state: this.state}});
-        return data;
-    }
-}
-
-/* Handles item editing */
-export class EditItem_Transaction extends jsTPS_Transaction {
-	constructor(listID, itemID, field, prev, update, flag, callback) {
+/* Handles region editing */
+export class EditRegion_Transaction extends jsTPS_Transaction {
+	constructor(regionID, field, prev, update, callback) {
 		super();
-		this.listID = listID;
-		this.itemID = itemID;
+		this.regionID = regionID;
 		this.field = field;
 		this.prev = prev;
 		this.update = update;
-		this.flag = flag;
 		this.updateFunction = callback;
 	}	
 
 	async doTransaction() {
 		const { data } = await this.updateFunction({ 
-				variables:{  itemId: this.itemID, _id: this.listID, 
+				variables:{  regionId: this.regionID,
 							 field: this.field, value: this.update, 
-							 flag: this.flag 
 						  }
 			});
 		return data;
@@ -132,9 +45,8 @@ export class EditItem_Transaction extends jsTPS_Transaction {
 
     async undoTransaction() {
 		const { data } = await this.updateFunction({ 
-				variables:{ itemId: this.itemID, _id: this.listID, 
+				variables:{ regionId: this.regionID, parentId: this.parentID, 
 							field: this.field, value: this.prev, 
-							flag: this.flag 
 						  }
 			});
 		return data;
@@ -142,14 +54,14 @@ export class EditItem_Transaction extends jsTPS_Transaction {
     }
 }
 
-/*  Handles create/delete of list items */
-export class UpdateListItems_Transaction extends jsTPS_Transaction {
+/*  Handles create/delete of regions. */
+export class UpdateListRegions_Transaction extends jsTPS_Transaction {
     // opcodes: 0 - delete, 1 - add 
-    constructor(listID, itemID, item, opcode, addfunc, delfunc, index = -1) {
+    constructor(parentID, regionID, region, opcode, addfunc, delfunc, index = -1) {
         super();
-        this.listID = listID;
-		this.itemID = itemID;
-		this.item = item;
+        this.parentID = parentID;
+		this.regionID = regionID;
+		this.region = region;
         this.addFunction = addfunc;
         this.deleteFunction = delfunc;
         this.opcode = opcode;
@@ -158,11 +70,11 @@ export class UpdateListItems_Transaction extends jsTPS_Transaction {
     async doTransaction() {
 		let data;
         this.opcode === 0 ? { data } = await this.deleteFunction({
-							variables: {itemId: this.itemID, _id: this.listID}})
+							variables: {regionId: this.regionID, parentId: this.parentID}})
 						  : { data } = await this.addFunction({
-							variables: {item: this.item, _id: this.listID, index: this.index}})  
+							variables: {region: this.region, parentId: this.parentID, index: this.index}})  
 		if(this.opcode !== 0) {
-            this.item._id = this.itemID = data.addItem;
+            this.region._id = this.regionID = data.addRegion;
 		}
 		return data;
     }
@@ -170,11 +82,11 @@ export class UpdateListItems_Transaction extends jsTPS_Transaction {
     async undoTransaction() {
 		let data;
         this.opcode === 1 ? { data } = await this.deleteFunction({
-							variables: {itemId: this.itemID, _id: this.listID}})
+							variables: {regionId: this.regionID, parentId: this.parentID}})
                           : { data } = await this.addFunction({
-							variables: {item: this.item, _id: this.listID, index: this.index}})
+							variables: {region: this.region, parentId: this.parentID, index: this.index}})
 		if(this.opcode !== 1) {
-            this.item._id = this.itemID = data.addItem;
+            this.region._id = this.regionID = data.addRegion;
         }
 		return data;
     }

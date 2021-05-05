@@ -48,6 +48,7 @@ export const DELETE_REGION = gql`
 	mutation DeleteRegion($regionId: String!, $_id: String!) {
 		deleteRegion(regionId: $regionId, _id: $_id) {
 			_id
+			name
 			capital
 			leader
 			flag
@@ -61,15 +62,18 @@ export const DELETE_REGION = gql`
 `;
 
 export const UPDATE_REGION_FIELD = gql`
-	mutation UpdateRegionField($_id: String!, $regionId: String!, $field: String!, $value: String!, $flag: Int!) {
-		updateRegionField(_id: $_id, regionId: $regionId, field: $field, value: $value, flag: $flag) {
+	mutation UpdateRegionField($regionId: String!, $field: String!, $value: String!) {
+		updateRegionField(regionId: $regionId, field: $field, value: $value) {
 			_id
+			name
 			capital
 			leader
 			flag
 			landmarks
 			regions
 			parent
+			map
+			ancestry
 		}
 	}
 `;
@@ -78,12 +82,15 @@ export const REORDER_REGIONS = gql`
 	mutation ReorderRegions($_id: String!, $regionId: String!, $direction: Int!) {
 		reorderRegions(_id: $_id, regionId: $regionId, direction: $direction) {
 			_id
+			name
 			capital
 			leader
 			flag
 			landmarks
 			regions
 			parent
+			map
+			ancestry
 		}
 	}
 `;
@@ -92,12 +99,15 @@ export const SORT_REGIONS = gql`
 	mutation SortRegions($_id: String!, $direction: Int!, $state: String!, $field: String!) {
 		sortRegions(_id: $_id, direction: $direction, state: $state, field: $field) {
 			_id
+			name
 			capital
 			leader
 			flag
 			landmarks
 			regions
 			parent
+			map
+			ancestry
 		}
 	}
 `;

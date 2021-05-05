@@ -6,13 +6,15 @@ const TableContents = (props) => {
     return (
         entries ? <div className=' table-entries container-primary'>
             {
-                entries.map((entry) => (
+                entries.map((entry, index) => (
                     <TableEntry
                         regionId={entry}
+                        key={entry}
                         deleteRegion={props.deleteRegion}
-                        //updateRegionField={props.updateRegionField}
+                        editRegion={props.editRegion}
                         regionViewer={props.regionViewer}
                         goToRegion={props.goToRegion}
+                        index={index}
                     />
                 ))
             }

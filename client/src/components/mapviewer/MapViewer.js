@@ -10,6 +10,12 @@ import { WLayout, WLHeader, WLMain, } from 'wt-frontend';
 import { useHistory, useParams } from 'react-router-dom';
 import TableContents from './TableContents';
 import TableHeader from './TableHeader';
+import { 
+	UpdateListRegions_Transaction, 
+	EditRegion_Transaction,
+	SortRegions_Transaction,
+	jsTPS
+} 				from '../../utils/jsTPS';
 
 
 const MapViewer = (props) => {
@@ -60,6 +66,26 @@ const MapViewer = (props) => {
 	const [DeleteRegion] 				= useMutation(mutations.DELETE_REGION);
 	const [UpdateRegionField]				= useMutation(mutations.UPDATE_REGION_FIELD);
 
+	const tpsUndo = async () => {
+		const retVal = await props.tps.undoTransaction();
+		refetchMaps();
+		refetchRegions();
+		return retVal;
+	}
+
+	const tpsRedo = async () => {
+		const retVal = await props.tps.doTransaction();
+		refetchMaps();
+		refetchRegions();
+		return retVal;
+	}
+
+	const tpsReset = async () => {
+		const retVal = await props.tps.reset();
+		return retVal;
+	}
+
+
 	const addNewRegion = async () => {
 		let region = {
 			name: "N/A",
@@ -85,15 +111,13 @@ const MapViewer = (props) => {
 		refetchRegions();
 	};
 
-	/**
+	
 	const editRegion = async (regionID, field, value, prev) => {
-		let mapID = currentParentId.;
-		let transaction = new EditRegion_Transaction(mapID, regionID, field, prev, value, UpdateRegionField);
+		let transaction = new EditRegion_Transaction(regionID, field, prev, value, UpdateRegionField);
 		props.tps.addTransaction(transaction);
 		tpsRedo();
 
 	};
-	*/
 
 	// Go to region viewer with selected region id.
 	const regionViewer = async (regionID) => {
@@ -165,7 +189,7 @@ const MapViewer = (props) => {
 					></TableHeader>
 					<TableContents parent={parent}
 						deleteRegion={deleteRegion}
-						//updateRegionField={updateRegionField}
+						editRegion={editRegion}
 						regionViewer={regionViewer}
 						goToRegion={goToRegion}
 					></TableContents>

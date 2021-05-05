@@ -22,7 +22,7 @@ const SidebarEntry = (props) => {
     return (
         <WNavItem 
             className={entryStyle} onDoubleClick={handleEditing} 
-            onClick={() => { props.handleSetActive(props.id) }} hoverAnimation="lighten"
+            onClick={() => { props.handleSetActive(props.id) }} hoveranimation="lighten"
         >
             {
                 editing ? <WInput className="list-item-edit" inputClass="list-item-edit-input" wType="lined" barAnimation="solid" name='name' onBlur={handleSubmit} autoFocus={true} defaultValue={props.name} />

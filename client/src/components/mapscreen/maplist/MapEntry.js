@@ -12,7 +12,7 @@ const MapEntry = (props) => {
     return (
         <WRow
             className={entryStyle}
-            onClick={() => { } } hoverAnimation="lighten"
+            onClick={() => { } } hoveranimation="lighten"
         >
             <WCol size='6'>
                 <WNavItem>

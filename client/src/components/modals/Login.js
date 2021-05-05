@@ -67,12 +67,12 @@ const Login = (props) => {
 			<WMFooter>
 			<WRow>
 				<WCol size="6">
-					<WButton className="modal-button" onClick={handleLogin} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+					<WButton className="modal-button" onClick={handleLogin} clickAnimation="ripple-light" hoveranimation="darken" shape="rounded">
 						Login
 					</WButton>
 				</WCol>
 				<WCol size="6">
-					<WButton className="modal-button" onClick={() => props.setShowLogin(false)} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+					<WButton className="modal-button" onClick={() => props.setShowLogin(false)} clickAnimation="ripple-light" hoveranimation="darken" shape="rounded">
 						Cancel
 					</WButton>
 				</WCol>

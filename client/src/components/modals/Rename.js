@@ -36,12 +36,12 @@ const RenameMap = (props) => {
             </WMMain>
 			<WRow>
 				<WCol size="6">
-					<WButton className="modal-button" onClick={() => {handleRenameMap();}} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+					<WButton className="modal-button" onClick={() => {handleRenameMap();}} clickAnimation="ripple-light" hoveranimation="darken" shape="rounded">
 						Rename Map
 					</WButton>
 				</WCol>
 				<WCol size="6">
-					<WButton className="modal-button" onClick={() => props.setShowRename(props.currentMapId, props.currentMapName)} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+					<WButton className="modal-button" onClick={() => props.setShowRename(props.currentMapId, props.currentMapName)} clickAnimation="ripple-light" hoveranimation="darken" shape="rounded">
 						Cancel
 					</WButton>
 				</WCol>

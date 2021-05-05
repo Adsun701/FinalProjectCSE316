@@ -75,12 +75,12 @@ const CreateAccount = (props) => {
 			}
 			<WRow>
 				<WCol size="6">
-					<WButton className="modal-button" onClick={handleCreateAccount} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+					<WButton className="modal-button" onClick={handleCreateAccount} clickAnimation="ripple-light" hoveranimation="darken" shape="rounded">
 						Create Account
 					</WButton>
 				</WCol>
 				<WCol size="6">
-					<WButton className="modal-button" onClick={() => props.setShowCreate(false)} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+					<WButton className="modal-button" onClick={() => props.setShowCreate(false)} clickAnimation="ripple-light" hoveranimation="darken" shape="rounded">
 						Cancel
 					</WButton>
 				</WCol>

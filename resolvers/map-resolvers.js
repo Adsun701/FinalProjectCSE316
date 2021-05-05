@@ -172,25 +172,27 @@ module.exports = {
 			else return found.regions;
 		},
 		/** 
-			@param	 {object} args - a map objectID, an region objectID, field, and
+			@param	 {object} args - a region objectID, field, and
 									 update value.
-			@returns {array} the updated region array on success, or the initial region array on failure
+			@returns {object} the updated region on success, or the initial region on failure
 		**/
 		updateRegionField: async (_, args) => {
-			const { _id, regionId, field } = args;
+			const { regionId, field } = args;
 			let { value } = args
-			const mapId = new ObjectId(_id);
-			const found = await Map.findOne({_id: mapId});
-			let listRegions = found.regions;
-			listRegions.map(region => {
-				if(region._id.toString() === regionId) {	
-					
-					region[field] = value;
-				}
-			});
-			const updated = await Map.updateOne({_id: mapId}, { regions: listRegions })
-			if(updated) return (listRegions);
-			else return (found.regions);
+			const found = await Region.findOne({_id: regionId});
+			let region = found;
+			region[field] = value;
+			let updated = null;
+			if (field === "name")
+				updated = await Region.updateOne({_id: regionId}, {name: value});
+			else if (field === "capital")
+				updated = await Region.updateOne({_id: regionId}, {capital: value});
+			else if (field === "leader")
+				updated = await Region.updateOne({_id: regionId}, {leader: value});
+			else
+				updated = await Region.updateOne({_id: regionId}, {flag: value});
+			if(updated) return (region);
+			else return (found);
 		},
 		/**
 			@param 	 {object} args - contains map id, region to swap, and swap direction

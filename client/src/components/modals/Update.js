@@ -74,12 +74,12 @@ const UpdateAccount = (props) => {
 			}
 			<WRow>
 				<WCol size="6">
-					<WButton className="modal-button" onClick={handleUpdateAccount} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+					<WButton className="modal-button" onClick={handleUpdateAccount} clickAnimation="ripple-light" hoveranimation="darken" shape="rounded">
 						Update
 					</WButton>
 				</WCol>
 				<WCol size="6">
-					<WButton className="modal-button" onClick={() => props.setShowUpdate(false)} clickAnimation="ripple-light" hoverAnimation="darken" shape="rounded">
+					<WButton className="modal-button" onClick={() => props.setShowUpdate(false)} clickAnimation="ripple-light" hoveranimation="darken" shape="rounded">
 						Cancel
 					</WButton>
 				</WCol>

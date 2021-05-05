@@ -29,6 +29,7 @@ const TableEntry = (props) => {
     };
 
     const handleCapitalEdit = (e) => {
+        //console.log(e);
         toggleCapitalEdit(false);
         const newCapital = e.target.value ? e.target.value : 'N/A';
         const prevCapital = capital;
@@ -54,14 +55,13 @@ const TableEntry = (props) => {
             <WCol size="3">
                 {
                     editingName || name === ''
-                        ? <WInput
+                        ? <input
                             className='table-input' onBlur={handleNameEdit}
                             autoFocus={true} defaultValue={name} type='text'
                             wType="outlined" barAnimation="solid" inputClass="table-input-class"
                         />
                         : <div className="table-text"
-                            onClick={() => {}}
-                            //onClick={() => toggleNameEdit(!editingName)}
+                            onClick={() => toggleNameEdit(!editingName)}
                             onDoubleClick={() => {props.goToRegion(_id)}}
                         >{name}
                         </div>
@@ -84,7 +84,7 @@ const TableEntry = (props) => {
 
             <WCol size="2">
                 {
-                    editingLeader ? <select
+                    editingLeader ? <input
                         className='table-input' onBlur={handleLeaderEdit}
                         autoFocus={true} defaultValue={leader} type='text'
                         wType="outlined" barAnimation="solid" inputClass="table-input-class"
@@ -98,7 +98,7 @@ const TableEntry = (props) => {
 
             <WCol size="2">
                 {
-                    editingFlag ? <select
+                    editingFlag ? <input
                         className='table-input' onBlur={handleFlagEdit}
                         autoFocus={true} defaultValue={flag} type='text'
                         wType="outlined" barAnimation="solid" inputClass="table-input-class"
