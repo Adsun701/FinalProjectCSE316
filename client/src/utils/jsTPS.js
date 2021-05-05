@@ -301,7 +301,7 @@ export class jsTPS {
      * return true if a redo operation is possible, false otherwise.
      */
     hasTransactionToRedo() {
-        return this.mostRecentTransaction < (this.transactions.length-1);
+        return this.mostRecentTransaction < (this.transactions.length - 1);
     }
         
     /**

@@ -61,6 +61,8 @@ const MapViewer = (props) => {
 	const [currentRegionId, setCurrentRegionId] 		= useState('');
 	const [showDeleteRegion, toggleShowDeleteRegion] 	= useState(false);
     const [showUpdate, toggleShowUpdate]    			= useState(false);
+	const [canUndo, toggleCanUndo]						= useState(false);
+	const [canRedo, toggleCanRedo]						= useState(false);
 
 	const [AddRegion] 					= useMutation(mutations.ADD_REGION);
 	const [DeleteRegion] 				= useMutation(mutations.DELETE_REGION);
@@ -70,6 +72,10 @@ const MapViewer = (props) => {
 		const retVal = await props.tps.undoTransaction();
 		refetchMaps();
 		refetchRegions();
+		if (props.tps.hasTransactionToRedo()) toggleCanRedo(true);
+		else toggleCanRedo(false);
+		if (props.tps.hasTransactionToUndo()) toggleCanUndo(true);
+		else toggleCanUndo(false);
 		return retVal;
 	}
 
@@ -77,6 +83,10 @@ const MapViewer = (props) => {
 		const retVal = await props.tps.doTransaction();
 		refetchMaps();
 		refetchRegions();
+		if (props.tps.hasTransactionToRedo()) toggleCanRedo(true);
+		else toggleCanRedo(false);
+		if (props.tps.hasTransactionToUndo()) toggleCanUndo(true);
+		else toggleCanUndo(false);
 		return retVal;
 	}
 
@@ -84,7 +94,6 @@ const MapViewer = (props) => {
 		const retVal = await props.tps.reset();
 		return retVal;
 	}
-
 
 	const addNewRegion = async () => {
 		let region = {
@@ -170,11 +179,11 @@ const MapViewer = (props) => {
 						<WButton className="map-entry-buttons" onClick={() => {addNewRegion();}} wType="texted">
 							<i className="material-icons add-button">add</i>
 						</WButton>
-						<WButton className="map-entry-buttons" onClick={() => {}} wType="texted">
-							<i className="material-icons">undo</i>
+						<WButton className="map-entry-buttons" onClick={() => {if (canUndo) tpsUndo();}} wType="texted">
+							<i className="material-icons" style={{opacity : canUndo ? '1' : '0.5'}}>undo</i>
 						</WButton>
-						<WButton className="map-entry-buttons" onClick={() => {}} wType="texted">
-							<i className="material-icons">redo</i>
+						<WButton className="map-entry-buttons" onClick={() => {if (canRedo) tpsRedo();}} wType="texted">
+							<i className="material-icons" style={{opacity : canRedo ? '1' : '0.5'}}>redo</i>
 						</WButton>
 					</WCol>
 					<WCol className="map-name" size='6'>
