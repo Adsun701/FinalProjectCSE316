@@ -9,7 +9,18 @@ const TableEntry = (props) => {
     const {data} = useQuery(GET_DB_REGION, { variables: {_id: props.regionId} });
 	if(data) newRegion = data.getRegionById;
 
-    const region = newRegion ? newRegion : {};
+    const region = newRegion ? {
+            _id: newRegion._id,
+            name: newRegion.name,
+            capital: newRegion.capital,
+            leader: newRegion.leader,
+            flag: newRegion.flag,
+            landmarks: newRegion.landmarks,
+            regions: newRegion.regions,
+            parent: newRegion.parent,
+            map: newRegion.map,
+            ancestry: newRegion.ancestry
+        } : {};
     const _id = region ? region._id : '';
     const name = region ? region.name : '';
     const capital = region ? region.capital : '';
@@ -50,9 +61,18 @@ const TableEntry = (props) => {
         props.editRegion(_id, 'flag', newFlag, prevFlag);
     };
 
+    const handleDelete = (_id, region, index) => {
+        props.setShowDeleteRegion(_id, region, index);
+    }
+
     return (
         <WRow className='table-entry'>
-            <WCol size="3">
+            <WCol size="1">
+                <WButton className="map-entry-buttons" onClick={() => {handleDelete(_id, region, props.index);}} wType="texted">
+                    <i className="material-icons">close</i>
+                </WButton>
+            </WCol>
+            <WCol size="2">
                 {
                     editingName || name === ''
                         ? <input

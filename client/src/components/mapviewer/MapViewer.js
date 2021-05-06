@@ -2,6 +2,7 @@ import React, { useState } 	from 'react';
 import Logo 							from '../navbar/Logo';
 import NavbarOptions 					from '../navbar/NavbarOptions';
 import UpdateAccount 					from '../modals/Update';
+import DeleteRegionInList 				from '../modals/DeleteRegion';
 import { GET_DB_MAPS, GET_DB_REGION } 				from '../../cache/queries';
 import * as mutations 					from '../../cache/mutations';
 import { useMutation, useQuery } 		from '@apollo/client';
@@ -58,7 +59,9 @@ const MapViewer = (props) => {
 	const currentMapId 									= (parent && parent.map ? parent.map : _id);
 	const currentParentName 							= (parent === null ? '' : parent.name);
     const currentParentRegions							= (parent === null ? [] : parent.regions);
+	const [currentRegionIndex, setRegionIndex]			= useState(-1);
 	const [currentRegionId, setCurrentRegionId] 		= useState('');
+	const [currentRegion, setCurrentRegion] 			= useState({});
 	const [showDeleteRegion, toggleShowDeleteRegion] 	= useState(false);
     const [showUpdate, toggleShowUpdate]    			= useState(false);
 	const [canUndo, toggleCanUndo]						= useState(false);
@@ -97,6 +100,7 @@ const MapViewer = (props) => {
 
 	const addNewRegion = async () => {
 		let region = {
+			_id: "",
 			name: "N/A",
 			capital: "N/A",
 			leader: "N/A",
@@ -107,17 +111,19 @@ const MapViewer = (props) => {
 			map: currentMapId,
 			ancestry: (!parent.map ? [currentParentId] : [...parent.ancestry, currentParentId] )
 		}
-		const { data } = await AddRegion({ variables: { region: region } });
-		refetchMaps();
-		refetchRegions();
-		if (data) return data["addRegion"];
-		else return "Unable to add region.";
+		let transaction = new UpdateListRegions_Transaction(currentParentId, '', region, 1, AddRegion, DeleteRegion);
+		props.tps.addTransaction(transaction);
+		tpsRedo();
+		//const { data } = await AddRegion({ variables: { region: region, index: parent.regions.length - 1 } });
+		//if (data) return data["addRegion"];
+		//else return "Unable to add region.";
 	};
 
-	const deleteRegion = async (_id) => {
-		DeleteRegion({ variables: { _id: _id, map: currentMapId} });
-		refetchMaps();
-		refetchRegions();
+	const deleteRegion = async (_id, region, index) => {
+		let transaction = new UpdateListRegions_Transaction(currentParentId, _id, region, 0, AddRegion, DeleteRegion, index);
+		props.tps.addTransaction(transaction);
+		tpsRedo();
+		//DeleteRegion({ variables: { regionId: _id, parentId: currentParentId, index: currentIndex} });
 	};
 
 	
@@ -144,10 +150,12 @@ const MapViewer = (props) => {
 		a modal manager that handles which to show.
 	*/
 
-	const setShowDeleteRegion = async (_id) => {
+	const setShowDeleteRegion = async (_id, region, index) => {
 		toggleShowUpdate(false);
 		toggleShowDeleteRegion(!showDeleteRegion);
 		setCurrentRegionId(_id);
+		setCurrentRegion(region);
+		setRegionIndex(index);
 	};
 
 	const setShowUpdate = () => {
@@ -197,7 +205,7 @@ const MapViewer = (props) => {
 						setShowDeleteRegion={setShowDeleteRegion}
 					></TableHeader>
 					<TableContents parent={parent}
-						deleteRegion={deleteRegion}
+						deleteRegion={deleteRegion} setCurrentRegion={setCurrentRegion} setShowDeleteRegion={setShowDeleteRegion}
 						editRegion={editRegion}
 						regionViewer={regionViewer}
 						goToRegion={goToRegion}
@@ -206,8 +214,8 @@ const MapViewer = (props) => {
 			</WLMain>
 
 			{
-				showDeleteRegion && (<DeleteRegion deleteRegion={deleteRegion} setShowDeleteRegion={setShowDeleteRegion}
-					currentParentId={currentParentId} currentRegionId={currentRegionId}/>)
+				showDeleteRegion && (<DeleteRegionInList deleteRegion={deleteRegion} setShowDeleteRegion={setShowDeleteRegion}
+					currentParentId={currentParentId} currentRegionId={currentRegionId} region={currentRegion} index={currentRegionIndex}/>)
 			}
 			{
 				showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} userId={props.user._id}/>)

@@ -10,7 +10,7 @@ const TableContents = (props) => {
                     <TableEntry
                         regionId={entry}
                         key={entry}
-                        deleteRegion={props.deleteRegion}
+                        deleteRegion={props.deleteRegion} setCurrentRegion={props.setCurrentRegion} setShowDeleteRegion={props.setShowDeleteRegion}
                         editRegion={props.editRegion}
                         regionViewer={props.regionViewer}
                         goToRegion={props.goToRegion}

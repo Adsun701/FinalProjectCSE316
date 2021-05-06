@@ -57,7 +57,7 @@ export class EditRegion_Transaction extends jsTPS_Transaction {
 /*  Handles create/delete of regions. */
 export class UpdateListRegions_Transaction extends jsTPS_Transaction {
     // opcodes: 0 - delete, 1 - add 
-    constructor(parentID, regionID, region, opcode, addfunc, delfunc, index = -1) {
+    constructor(parentID, regionID = '', region, opcode, addfunc, delfunc, index = -1) {
         super();
         this.parentID = parentID;
 		this.regionID = regionID;
@@ -65,14 +65,14 @@ export class UpdateListRegions_Transaction extends jsTPS_Transaction {
         this.addFunction = addfunc;
         this.deleteFunction = delfunc;
         this.opcode = opcode;
-	this.index = index
+	    this.index = index;
     }
     async doTransaction() {
 		let data;
         this.opcode === 0 ? { data } = await this.deleteFunction({
-							variables: {regionId: this.regionID, parentId: this.parentID}})
+							variables: {regionId: this.regionID, parentId: this.parentID, index: this.index}})
 						  : { data } = await this.addFunction({
-							variables: {region: this.region, parentId: this.parentID, index: this.index}})  
+							variables: {region: this.region, regionId: this.regionID, index: this.index}})  
 		if(this.opcode !== 0) {
             this.region._id = this.regionID = data.addRegion;
 		}
@@ -81,10 +81,11 @@ export class UpdateListRegions_Transaction extends jsTPS_Transaction {
     // Since delete/add are opposites, flip matching opcode
     async undoTransaction() {
 		let data;
+        console.log(this.regionID);
         this.opcode === 1 ? { data } = await this.deleteFunction({
-							variables: {regionId: this.regionID, parentId: this.parentID}})
+							variables: {regionId: this.regionID, parentId: this.parentID, index: this.index}})
                           : { data } = await this.addFunction({
-							variables: {region: this.region, parentId: this.parentID, index: this.index}})
+							variables: {region: this.region, regionId: this.regionID, index: this.index}})
 		if(this.opcode !== 1) {
             this.region._id = this.regionID = data.addRegion;
         }

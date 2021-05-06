@@ -96,15 +96,17 @@ module.exports = {
 			@returns {string} the objectID of the region or an error message
 		**/
 		addRegion: async(_, args) => {
-			const { region } = args;
+			const { region, regionId, index} = args;
+			let _id = null;
+			if (regionId !== '') _id = regionId;
+			else _id = new ObjectId();
 			// new object id for region.
-			const regionId = new ObjectId();
 			// set parent of region.
 			const parent = region.parent;
 
 			// construct new region.
 			const newRegion = new Region({
-				_id: regionId,
+				_id: _id,
 				name: region.name,
 				capital: region.capital,
 				leader: region.leader,
@@ -122,7 +124,8 @@ module.exports = {
 			const mapFound = await Map.findOne({_id: parent});
 			if(mapFound) {
 				let listRegions = mapFound.regions;
-		    	listRegions.push(regionId);
+				if (index === -1) listRegions.push(_id);
+				else listRegions.splice(index, 0, _id);
 				updated = await Map.updateOne({_id: parent}, { regions: listRegions });
 			}
 			else {
@@ -130,7 +133,8 @@ module.exports = {
 				const regionFound = await Region.findOne({_id: parent});
 				if (regionFound) {
 					let listRegions = regionFound.regions;
-					listRegions.push(regionId);
+					if (index === -1) listRegions.push(_id);
+					else listRegions.splice(index, 0, _id);
 					updated = await Region.updateOne({_id: parent}, { regions: listRegions });
 				}
 				else {
@@ -150,26 +154,34 @@ module.exports = {
 							 array on failure
 		**/
 		deleteRegion: async (_, args) => {
-			const  { regionId, mapId } = args;
+			const  { regionId, parentId, index } = args;
+			// look in maps.
+			const mapFound = await Map.findOne({_id: parentId});
+			if(mapFound) {
+				let listRegions = mapFound.regions;
+				listRegions = listRegions.filter(region => region.toString() !== regionId);
+				updated = await Map.updateOne({_id: parentId}, { regions: listRegions });
 
-			// look for the map that contains our region with the regionId.
-			const found = await Map.findOne({_id: mapId});
+				// delete our region from regions.
+				await Region.deleteOne({_id: regionId});
+				return listRegions;
+			}
+			else {
+				// look in regions.
+				const regionFound = await Region.findOne({_id: parentId});
+				if (regionFound) {
+					let listRegions = regionFound.regions;
+					listRegions = listRegions.filter(region => region.toString() !== regionId);
+					updated = await Region.updateOne({_id: parentId}, { regions: listRegions });
 
-			// this is an array of string objectIDs for regions.
-			let listRegions = found.regions;
-
-			listRegions = listRegions.filter(region => region.toString() !== regionId); //&& !region.ancestry.includes(regionId));
-
-			// update map with new list of region ids. if not updated, return original regions.
-			const mapUpdated = await Map.updateOne({_id: mapId}, { regions: listRegions });
-			if(!mapUpdated) return (found.regions);
-			
-			// delete all regions that are the original region being deleted and its children.
-			const regionsDeleted = await Region.deleteMany(region => region._id !== regionId && !region.ancestry.includes(regionId));
-
-			// if regions were succesfully deleted, return modified region list. else return original regions.
-			if (regionsDeleted) return listRegions;
-			else return found.regions;
+					// delete our region from regions.
+					await Region.deleteOne({_id: regionId});
+					return listRegions;
+				}
+				else {
+					return [];
+				}
+			}
 		},
 		/** 
 			@param	 {object} args - a region objectID, field, and

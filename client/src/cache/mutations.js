@@ -39,14 +39,14 @@ export const LOGOUT = gql`
 `;
 
 export const ADD_REGION = gql`
-	mutation AddRegion($region: RegionInput!) {
-	  	addRegion(region: $region)
+	mutation AddRegion($region: RegionInput!, $regionId: String! $index: Int!) {
+	  	addRegion(region: $region, regionId: $regionId, index: $index)
 	}
 `;
 
 export const DELETE_REGION = gql`
-	mutation DeleteRegion($regionId: String!, $_id: String!) {
-		deleteRegion(regionId: $regionId, _id: $_id) {
+	mutation DeleteRegion($regionId: String!, $parentId: String!, $index: Int!) {
+		deleteRegion(regionId: $regionId, parentId: $parentId, index: $index) {
 			_id
 			name
 			capital
