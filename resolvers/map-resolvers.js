@@ -322,11 +322,13 @@ module.exports = {
             }
 			else if (field === "landmarks") {
                 if (direction > 0) {
-					arr.sort((a, b) => (a.landmarks[0].toLowerCase() < b.landmarks[0].toLowerCase()) ? 1 : -1);
+					arr.sort((a, b) => ((a.landmarks.length > 0 ? a.landmarks[0].toLowerCase() : "No Landmarks") <
+						(b.landmarks.length > 0 ? b.landmarks[0].toLowerCase() : "No Landmarks")) ? 1 : -1);
 					listRegions = arr.map((region => region._id));
 				}
                 else if (direction < 0) {
-					arr.sort((a, b) => (a.landmarks[0].toLowerCase() > b.landmarks[0].toLowerCase()) ? 1 : -1);
+					arr.sort((a, b) => ((a.landmarks.length > 0 ? a.landmarks[0].toLowerCase() : "No Landmarks") >
+						(b.landmarks.length > 0 ? b.landmarks[0].toLowerCase() : "No Landmarks")) ? 1 : -1);
 					listRegions = arr.map((region => region._id));
 				}
                 else {
