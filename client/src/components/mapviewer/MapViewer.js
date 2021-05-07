@@ -74,8 +74,8 @@ const MapViewer = (props) => {
 	const [currentRegion, setCurrentRegion] 			= useState({});
 	const [showDeleteRegion, toggleShowDeleteRegion] 	= useState(false);
     const [showUpdate, toggleShowUpdate]    			= useState(false);
-	const [canUndo, toggleCanUndo]						= useState(false);
-	const [canRedo, toggleCanRedo]						= useState(false);
+	const [canUndo, toggleCanUndo]						= useState(props.tps.hasTransactionToUndo() ? true : false);
+	const [canRedo, toggleCanRedo]						= useState(props.tps.hasTransactionToRedo() ? true : false);
 
 	const [nameAsc, toggleNameAsc] 				= useState(true);
 	const [capitalAsc, toggleCapitalAsc] 		= useState(true);
@@ -110,6 +110,8 @@ const MapViewer = (props) => {
 
 	const tpsReset = async () => {
 		const retVal = await props.tps.reset();
+		toggleCanUndo(false);
+		toggleCanRedo(false);
 		return retVal;
 	}
 
@@ -191,7 +193,7 @@ const MapViewer = (props) => {
 				<WNavbar color="colored">
 					<ul>
 						<WNavItem>
-							<Logo className='logo'/>
+							<Logo tpsReset={tpsReset} className='logo'/>
 						</WNavItem>
 					</ul>
 					<ul>

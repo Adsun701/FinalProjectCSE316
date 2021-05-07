@@ -2,7 +2,19 @@ import React, { useState } from 'react';
 import { WButton, WRow, WCol } from 'wt-frontend';
 
 const TableEntry = (props) => {
-    const region = props.region;
+
+    const region = props.region ? {
+        _id: props.region._id,
+        name: props.region.name,
+        capital: props.region.capital,
+        leader: props.region.leader,
+        flag: props.region.flag,
+        landmarks: props.region.landmarks,
+        regions: props.region.regions,
+        parent: props.region.parent,
+        map: props.region.map,
+        ancestry: props.region.ancestry
+    } : {};
     const _id = region && region._id ? region._id : 'Error';
     const name = region && region.name ? region.name : 'Error';
     const capital = region && region.capital ? region.capital : 'Error';

@@ -2,7 +2,7 @@ import React, { useState } 	from 'react';
 import Logo 							from '../navbar/Logo';
 import NavbarOptions 					from '../navbar/NavbarOptions';
 import UpdateAccount 					from '../modals/Update';
-import { GET_DB_MAPS, GET_DB_REGION } 				from '../../cache/queries';
+import { GET_DB_MAPS, GET_DB_REGION, GET_DB_REGIONS_BY_PARENT } 				from '../../cache/queries';
 import { useQuery } 		from '@apollo/client';
 import { WButton, WRow, WCol, WNavbar, WNavItem } 	from 'wt-frontend';
 import { WLayout, WLHeader, WLMain, WLSide } from 'wt-frontend';
@@ -33,7 +33,7 @@ const RegionViewer = (props) => {
 	}
 
     // get parent name, first from regions, then maps if not successful.
-    data = useQuery(GET_DB_REGION, { variables: {_id: newRegion.parent} })['data'];
+    data = useQuery(GET_DB_REGION, { variables: {_id: newRegion ?newRegion.parent : ''} })['data'];
     if (data) {
         newRegionParent = data.getRegionById;
     }
@@ -41,11 +41,13 @@ const RegionViewer = (props) => {
     if(data) { 
 		let maps = data.getAllMaps;
 		maps.forEach(m => {
-			if (m._id === newRegion.parent) {
+			if (newRegion && m._id === newRegion.parent) {
 				newRegionParent = m;
 			}
 		});
 	}
+
+	let refetchRegions = useQuery(GET_DB_REGIONS_BY_PARENT, { variables: {parentId: _id} })['refetch'];
 
 
 	const region 										= (newRegion ? newRegion : null);
@@ -57,6 +59,8 @@ const RegionViewer = (props) => {
     const currentRegionLeader                           = (region ? region.leader : 'N/A');
     const currentRegionRegions							= (region ? region.regions : []);
     const [showUpdate, toggleShowUpdate]    			= useState(false);
+	const [canUndo, toggleCanUndo]						= useState(props.tps.hasTransactionToUndo() ? true : false);
+	const [canRedo, toggleCanRedo]						= useState(props.tps.hasTransactionToRedo() ? true : false);
 
 	/**
 	const editRegion = async (regionID, field, value, prev) => {
@@ -67,6 +71,33 @@ const RegionViewer = (props) => {
 
 	};
 	*/
+
+	const tpsUndo = async () => {
+		const retVal = await props.tps.undoTransaction();
+		refetchRegions();
+		if (props.tps.hasTransactionToRedo()) toggleCanRedo(true);
+		else toggleCanRedo(false);
+		if (props.tps.hasTransactionToUndo()) toggleCanUndo(true);
+		else toggleCanUndo(false);
+		return retVal;
+	}
+
+	const tpsRedo = async () => {
+		const retVal = await props.tps.doTransaction();
+		refetchRegions();
+		if (props.tps.hasTransactionToRedo()) toggleCanRedo(true);
+		else toggleCanRedo(false);
+		if (props.tps.hasTransactionToUndo()) toggleCanUndo(true);
+		else toggleCanUndo(false);
+		return retVal;
+	}
+
+	const tpsReset = async () => {
+		const retVal = await props.tps.reset();
+		toggleCanUndo(false);
+		toggleCanRedo(false);
+		return retVal;
+	}
 
 
 	/*
@@ -85,12 +116,12 @@ const RegionViewer = (props) => {
 				<WNavbar color="colored">
 					<ul>
 						<WNavItem>
-							<Logo className='logo'/>
+							<Logo className='logo' tpsReset={tpsReset}/>
 						</WNavItem>
 					</ul>
 					<ul>
 						<NavbarOptions
-                            fetchUser={props.fetchUser} auth={auth} 
+                            fetchUser={props.fetchUser} auth={auth}
                             refetchMaps={refetch}
                             setShowUpdate={setShowUpdate} userName={props.user === null ? '' : props.user.name}
 						/>
@@ -105,11 +136,11 @@ const RegionViewer = (props) => {
                     <WCol size='6' className='region-description'>
                         <WRow>
                             <WCol size='2'>
-                                <WButton className="map-entry-buttons" onClick={() => {}} wType="texted">
-                                    <i className="material-icons">undo</i>
+                                <WButton className="map-entry-buttons" onClick={() => {if (canUndo) tpsUndo();}} wType="texted">
+                                    <i className="material-icons" style={{opacity : canUndo ? '1' : '0.5'}}>undo</i>
                                 </WButton>
-                                <WButton className="map-entry-buttons" onClick={() => {}} wType="texted">
-                                    <i className="material-icons">redo</i>
+                                <WButton className="map-entry-buttons" onClick={() => {if (canRedo) tpsRedo();}} wType="texted">
+                                    <i className="material-icons" style={{opacity : canRedo ? '1' : '0.5'}}>redo</i>
                                 </WButton>
                             </WCol>
                         </WRow>
