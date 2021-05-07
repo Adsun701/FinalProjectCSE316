@@ -3,12 +3,12 @@ import { WButton, WRow, WCol } from 'wt-frontend';
 
 const TableEntry = (props) => {
     const region = props.region;
-    const _id = region ? region._id : '';
-    const name = region ? region.name : '';
-    const capital = region ? region.capital : '';
-    const leader = region ? region.leader : '';
-    const flag = region ? region.flag : '';
-    const landmarks = region ? region.landmarks : [];
+    const _id = region && region._id ? region._id : 'Error';
+    const name = region && region.name ? region.name : 'Error';
+    const capital = region && region.capital ? region.capital : 'Error';
+    const leader = region && region.leader ? region.leader : 'Error';
+    const flag = region && region.flag ? region.flag : 'Error';
+    const landmarks = region && region.landmarks ? region.landmarks : [];
     const [editingName, toggleNameEdit] = useState(false);
     const [editingCapital, toggleCapitalEdit] = useState(false);
     const [editingLeader, toggleLeaderEdit] = useState(false);

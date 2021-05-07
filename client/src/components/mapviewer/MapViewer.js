@@ -63,8 +63,8 @@ const MapViewer = (props) => {
 
 	let refetchRegions = useQuery(GET_DB_REGIONS_BY_PARENT, { variables: {parentId: _id} })['refetch'];
 
-	const parent 										= (newParent ? newParent : null);
-	const regions										= (newRegions ? newRegions : []);
+	const parent						            	= newParent;
+	let regions          		    					= newRegions;
 	const currentParentId 								= _id;
 	const currentMapId 									= (parent && parent.map ? parent.map : _id);
 	const currentParentName 							= (parent === null ? '' : parent.name);
@@ -90,7 +90,6 @@ const MapViewer = (props) => {
 
 	const tpsUndo = async () => {
 		const retVal = await props.tps.undoTransaction();
-		refetchMaps();
 		refetchRegions();
 		if (props.tps.hasTransactionToRedo()) toggleCanRedo(true);
 		else toggleCanRedo(false);
@@ -101,7 +100,6 @@ const MapViewer = (props) => {
 
 	const tpsRedo = async () => {
 		const retVal = await props.tps.doTransaction();
-		refetchMaps();
 		refetchRegions();
 		if (props.tps.hasTransactionToRedo()) toggleCanRedo(true);
 		else toggleCanRedo(false);
@@ -151,9 +149,11 @@ const MapViewer = (props) => {
 	};
 
 	const sortRegions = async (regionID, dir, field) => {
-		let transaction = new SortRegions_Transaction(regionID, dir, JSON.stringify(parent.regions), field, SortRegions);
+		let transaction = new SortRegions_Transaction(regionID, dir, JSON.stringify(regions), field, SortRegions);
 		props.tps.addTransaction(transaction);
-		tpsRedo();
+		let newRegions = await tpsRedo();
+		regions = newRegions.sortRegions;
+		refetchRegions();
 	}
 
 	// Go to region viewer with selected region id.

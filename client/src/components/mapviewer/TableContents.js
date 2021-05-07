@@ -3,7 +3,6 @@ import TableEntry   from './TableEntry';
 
 const TableContents = (props) => {
     const entries = props.regions;
-    console.log(entries);
     return (
         entries ? <div className=' table-entries container-primary'>
             {

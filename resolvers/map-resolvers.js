@@ -48,9 +48,13 @@ module.exports = {
 		getRegionsByParent: async (_, args) => {
 			const { parentId } = args;
 			const objectId = new ObjectId(parentId);
-			const regions = await Region.find({parent: objectId});
-			if (regions) return regions;
-			else return ([]);
+			const map = await Map.findOne({_id: objectId});
+			let regions = [];
+			for (let i = 0; i < map.regions.length; i++) {
+				let region = await Region.findOne({_id: map.regions[i]});
+				regions.push(region);
+			}
+			return regions;
 		}
 	},
 	Mutation: {
@@ -256,19 +260,8 @@ module.exports = {
 		sortRegions: async (_, args) => {
 			const { _id, direction, state, field} = args;
 			const parentId = new ObjectId(_id);
-			let arr = [];
-
 			let listRegions = null;
-			// search in maps.
-			const mapFound = await Map.findOne({_id: parentId});
-			const regionFound = await Region.findOne({_id: parentId});
-			if (mapFound) listRegions = mapFound.regions;
-			else if (regionFound) listRegions = regionFound.regions;
-
-			for (let i = 0; i < listRegions.length; i++) {
-				let regionItem = await Region.findOne({_id: listRegions[i]});
-				arr.push(regionItem);
-			}
+			let arr = await Region.find({parent: parentId});
 
 			// sort regions by field.
             if (field === "name") {
@@ -280,7 +273,10 @@ module.exports = {
 					arr.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
 					listRegions = arr.map((region => region._id));
 				}
-                else listRegions = JSON.parse(state);
+                else {
+					arr = JSON.parse(state);
+					listRegions = arr.map((region => region._id));
+				}
             }
             else if (field === "capital") {
                 if (direction > 0) {
@@ -291,7 +287,10 @@ module.exports = {
 					arr.sort((a, b) => (a.capital.toLowerCase() > b.capital.toLowerCase()) ? 1 : -1);
 					listRegions = arr.map((region => region._id));
 				}
-                else listRegions = JSON.parse(state);
+                else {
+					arr = JSON.parse(state);
+					listRegions = arr.map((region => region._id));
+				}
             }
             else if (field === "leader") {
                 if (direction > 0) {
@@ -302,7 +301,10 @@ module.exports = {
 					arr.sort((a, b) => (a.leader.toLowerCase() > b.leader.toLowerCase()) ? 1 : -1);
 					listRegions = arr.map((region => region._id));
 				}
-                else listRegions = JSON.parse(state);
+                else {
+					arr = JSON.parse(state);
+					listRegions = arr.map((region => region._id));
+				}
             }
             else if (field === "flag") {
                 if (direction > 0) {
@@ -313,7 +315,10 @@ module.exports = {
 					arr.sort((a, b) => (a.flag.toLowerCase() > b.flag.toLowerCase()) ? 1 : -1);
 					listRegions = arr.map((region => region._id));
 				}
-                else listRegions = JSON.parse(state);
+                else {
+					arr = JSON.parse(state);
+					listRegions = arr.map((region => region._id));
+				}
             }
 			else if (field === "landmarks") {
                 if (direction > 0) {
@@ -324,14 +329,17 @@ module.exports = {
 					arr.sort((a, b) => (a.landmarks[0].toLowerCase() > b.landmarks[0].toLowerCase()) ? 1 : -1);
 					listRegions = arr.map((region => region._id));
 				}
-                else listRegions = JSON.parse(state);
+                else {
+					arr = JSON.parse(state);
+					listRegions = arr.map((region => region._id));
+				}
             }
 			const mapUpdated = await Map.updateOne({_id: parentId}, { regions: listRegions });
 			const regionUpdated = await Region.updateOne({_id: parentId}, { regions: listRegions });
-			if(mapUpdated || regionUpdated) return (listRegions);
+			if(mapUpdated || regionUpdated) return (arr);
 			// return old ordering if reorder was unsuccessful
-			listRegions = JSON.parse(state);
-			return (listRegions);
+			arr = JSON.parse(state);
+			return (arr);
 		}
 	}
 }

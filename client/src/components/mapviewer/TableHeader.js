@@ -15,8 +15,6 @@ const TableHeader = (props) => {
                 <WButton onClick={() => {
                     props.sortRegions(props.currentParentId, props.nameAsc ? 1 : -1, "name");
                     props.toggleNameAsc(!props.nameAsc);
-                    props.refetchMaps();
-                    props.refetchRegions();
                 }
                 } className='table-header-section' wType="texted" >Name</WButton>
             </WCol>
@@ -25,8 +23,6 @@ const TableHeader = (props) => {
                 <WButton onClick={() => {
                     props.sortRegions(props.currentParentId, props.capitalAsc ? 1 : -1, "capital");
                     props.toggleCapitalAsc(!props.capitalAsc);
-                    props.refetchMaps();
-                    props.refetchRegions();
                 }
                 } className='table-header-section' wType="texted">Capital</WButton>
             </WCol>
@@ -35,8 +31,6 @@ const TableHeader = (props) => {
                 <WButton onClick={() => {
                     props.sortRegions(props.currentParentId, props.leaderAsc ? 1 : -1, "leader");
                     props.toggleLeaderAsc(!props.leaderAsc);
-                    props.refetchMaps();
-                    props.refetchRegions();
                 }
                 } className='table-header-section' wType="texted" >Leader</WButton>
             </WCol>
@@ -44,8 +38,6 @@ const TableHeader = (props) => {
                 <WButton onClick={() => {
                     props.sortRegions(props.currentParentId, props.flagAsc ? 1 : -1, "flag");
                     props.toggleFlagAsc(!props.flagAsc);
-                    props.refetchMaps();
-                    props.refetchRegions();
                 }
                 } className='table-header-section' wType="texted" >Flag</WButton>
             </WCol>
@@ -53,8 +45,6 @@ const TableHeader = (props) => {
             <WButton onClick={() => {
                     props.sortRegions(props.currentParentId, props.landmarksAsc ? 1 : -1, "landmarks");
                     props.toggleLandmarksAsc(!props.landmarksAsc);
-                    props.refetchMaps();
-                    props.refetchRegions();
                 }
                 } className='table-header-section' wType="texted" >Landmarks</WButton>
             </WCol>
