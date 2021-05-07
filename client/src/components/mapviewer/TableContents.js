@@ -2,7 +2,7 @@ import React        from 'react';
 import TableEntry   from './TableEntry';
 
 const TableContents = (props) => {
-    const entries = props.regions;
+    const entries = props && props.regions ? props.regions : [];
     return (
         entries ? <div className=' table-entries container-primary'>
             {

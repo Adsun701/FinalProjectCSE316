@@ -33,7 +33,7 @@ const RegionViewer = (props) => {
 	}
 
     // get parent name, first from regions, then maps if not successful.
-    data = useQuery(GET_DB_REGION, { variables: {_id: newRegion ?newRegion.parent : ''} })['data'];
+    data = useQuery(GET_DB_REGION, { variables: {_id: newRegion ? newRegion.parent : _id} })['data'];
     if (data) {
         newRegionParent = data.getRegionById;
     }
@@ -53,11 +53,11 @@ const RegionViewer = (props) => {
 	const region 										= (newRegion ? newRegion : null);
 	const currentRegionId 								= _id;
 	const currentMapId 									= (region && region.map ? region.map : _id);
-	const currentRegionName 							= (region  ? region.name : '');
-    const currentParentRegionName                       = (newRegionParent ? newRegionParent.name : '');
-    const currentRegionCapital                          = (region ? region.capital : 'N/A');
-    const currentRegionLeader                           = (region ? region.leader : 'N/A');
-    const currentRegionRegions							= (region ? region.regions : []);
+	const currentRegionName 							= (region && region.name ? region.name : '');
+    const currentParentRegionName                       = (newRegionParent && newRegionParent.name ? newRegionParent.name : '');
+    const currentRegionCapital                          = (region && region.capital ? region.capital : 'N/A');
+    const currentRegionLeader                           = (region && region.leader ? region.leader : 'N/A');
+    const currentRegionRegions							= (region && region.regions ? region.regions : []);
     const [showUpdate, toggleShowUpdate]    			= useState(false);
 	const [canUndo, toggleCanUndo]						= useState(props.tps.hasTransactionToUndo() ? true : false);
 	const [canRedo, toggleCanRedo]						= useState(props.tps.hasTransactionToRedo() ? true : false);

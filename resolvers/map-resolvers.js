@@ -49,6 +49,7 @@ module.exports = {
 			const { parentId } = args;
 			const objectId = new ObjectId(parentId);
 			const map = await Map.findOne({_id: objectId});
+			if (!map) return [];
 			let regions = [];
 			for (let i = 0; i < map.regions.length; i++) {
 				let region = await Region.findOne({_id: map.regions[i]});
