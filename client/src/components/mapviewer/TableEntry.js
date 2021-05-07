@@ -32,6 +32,8 @@ const TableEntry = (props) => {
     const [editingLeader, toggleLeaderEdit] = useState(false);
     const [editingFlag, toggleFlagEdit] = useState(false);
 
+    console.log(region.name);
+
     const handleNameEdit = (e) => {
         toggleNameEdit(false);
         const newName = e.target.value ? e.target.value : 'N/A';

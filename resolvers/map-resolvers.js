@@ -238,61 +238,101 @@ module.exports = {
 		},
 
 		/**
-		  	@param {object} args - contains map id, sort direction (1 is ascending, -1 is descending), state (stringified regions)
-                and field (String)
+		  	@param {object} args - contains parent id, sort direction (1 is ascending, -1 is descending), state (stringified regions)
+                and field (a String name, capital, leader or flag)
 		  	@returns {array} the sorted region array (by description) on success, or initial ordering on failure
 		**/
 		sortRegions: async (_, args) => {
 			const { _id, direction, state, field} = args;
-			const mapId = new ObjectId(_id);
-			const found = await Map.findOne({_id: mapId});
-			let listRegions = found.regions;
+			const parentId = new ObjectId(_id);
+			let arr = [];
+
+
+			const getRegion = async (_id) => {
+				let region = Region.findOne({_id: _id});
+				return region;
+			}
+
+			const getRegionName = async (_id) => {
+				let region = Region.findOne({_id: _id});
+				if (region.name) return region.name;
+				else return '';
+			}
+
+			let listRegions = null;
+			// search in maps.
+			const mapFound = await Map.findOne({_id: parentId});
+			const regionFound = await Region.findOne({_id: parentId});
+			if (mapFound) listRegions = mapFound.regions;
+			else if (regionFound) listRegions = regionFound.regions;
+
+			for (let i = 0; i < listRegions.length; i++) {
+				let regionItem = await Region.findOne({_id: listRegions[i]});
+				arr.push(regionItem);
+			}
+
 			// sort regions by field.
             if (field === "name") {
-                if (direction > 0)
-                    listRegions.sort((a, b) => (a.name.toLowerCase() < b.name.toLowerCase()) ? 1 : -1);
-                else if (direction < 0)
-                    listRegions.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
-                else
-                    listRegions = JSON.parse(state);
+                if (direction > 0) {
+					arr.sort((a, b) => (a.name.toLowerCase() < b.name.toLowerCase()) ? 1 : -1);
+					listRegions = arr.map((region => region._id));
+				}
+                else if (direction < 0) {
+					arr.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
+					listRegions = arr.map((region => region._id));
+				}
+                else listRegions = JSON.parse(state);
             }
             else if (field === "capital") {
-                if (direction > 0)
-                    listRegions.sort((a, b) => (a.capital.toLowerCase() < b.capital.toLowerCase()) ? 1 : -1);
-                else if (direction < 0)
-                    listRegions.sort((a, b) => (a.capital.toLowerCase() > b.capital.toLowerCase()) ? 1 : -1);
-                else
-                    listRegions = JSON.parse(state);
+                if (direction > 0) {
+					arr.sort((a, b) => (a.capital.toLowerCase() < b.capital.toLowerCase()) ? 1 : -1);
+					listRegions = arr.map((region => region._id));
+				}
+                else if (direction < 0) {
+					arr.sort((a, b) => (a.capital.toLowerCase() > b.capital.toLowerCase()) ? 1 : -1);
+					listRegions = arr.map((region => region._id));
+				}
+                else listRegions = JSON.parse(state);
             }
             else if (field === "leader") {
-                if (direction > 0)
-                    listRegions.sort((a, b) => (a.leader.toLowerCase() < b.leader.toLowerCase()) ? 1 : -1);
-                else if (direction < 0)
-                    listRegions.sort((a, b) => (a.leader.toLowerCase() > b.leader.toLowerCase()) ? 1 : -1);
-                else
-                    listRegions = JSON.parse(state);
+                if (direction > 0) {
+					arr.sort((a, b) => (a.leader.toLowerCase() < b.leader.toLowerCase()) ? 1 : -1);
+					listRegions = arr.map((region => region._id));
+				}
+                else if (direction < 0) {
+					arr.sort((a, b) => (a.leader.toLowerCase() > b.leader.toLowerCase()) ? 1 : -1);
+					listRegions = arr.map((region => region._id));
+				}
+                else listRegions = JSON.parse(state);
             }
             else if (field === "flag") {
-                if (direction > 0)
-                    listRegions.sort((a, b) => (a.flag.toLowerCase() < b.flag.toLowerCase()) ? 1 : -1);
-                else if (direction < 0)
-                    listRegions.sort((a, b) => (a.flag.toLowerCase() > b.flag.toLowerCase()) ? 1 : -1);
-                else
-                    listRegions = JSON.parse(state);
+                if (direction > 0) {
+					arr.sort((a, b) => (a.flag.toLowerCase() < b.flag.toLowerCase()) ? 1 : -1);
+					listRegions = arr.map((region => region._id));
+				}
+                else if (direction < 0) {
+					arr.sort((a, b) => (a.flag.toLowerCase() > b.flag.toLowerCase()) ? 1 : -1);
+					listRegions = arr.map((region => region._id));
+				}
+                else listRegions = JSON.parse(state);
             }
 			else if (field === "landmarks") {
-                if (direction > 0)
-                    listRegions.sort((a, b) => (a.landmarks[0].toLowerCase() < b.landmarks[0].toLowerCase()) ? 1 : -1);
-                else if (direction < 0)
-                    listRegions.sort((a, b) => (a.landmarks[0].toLowerCase() > b.landmarks[0].toLowerCase()) ? 1 : -1);
-                else
-                    listRegions = JSON.parse(state);
+                if (direction > 0) {
+					arr.sort((a, b) => (a.landmarks[0].toLowerCase() < b.landmarks[0].toLowerCase()) ? 1 : -1);
+					listRegions = arr.map((region => region._id));
+				}
+                else if (direction < 0) {
+					arr.sort((a, b) => (a.landmarks[0].toLowerCase() > b.landmarks[0].toLowerCase()) ? 1 : -1);
+					listRegions = arr.map((region => region._id));
+				}
+                else listRegions = JSON.parse(state);
             }
-			const updated = await Map.updateOne({_id: mapId}, { regions: listRegions })
+			let updated = await Map.updateOne({_id: parentId}, { regions: listRegions });
+			updated = await Region.updateOne({_id: parentId}, { regions: listRegions });
 			if(updated) return (listRegions);
 			// return old ordering if reorder was unsuccessful
-			listRegions = found.regions;
-			return (found.regions);
+			listRegions = JSON.parse(state);
+			return (listRegions);
 		}
 	}
 }

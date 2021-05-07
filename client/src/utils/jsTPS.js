@@ -5,20 +5,21 @@ export class jsTPS_Transaction {
 
 /* Sorts regions in list. */
 export class SortRegions_Transaction extends jsTPS_Transaction {
-    constructor(listID, dir, state, callback) {
+    constructor(regionID, dir, state, field, callback) {
         super();
-        this.listID = listID;
+        this.regionID = regionID;
         this.dir = dir;
         this.state = state;
+        this.field = field;
         this.updateFunction = callback;
     }
 
     async doTransaction() {
-        const { data } = await this.updateFunction({ variables: { _id: this.listID, direction: this.dir, state: this.state}});
+        const { data } = await this.updateFunction({ variables: { _id: this.regionID, direction: this.dir, state: this.state, field: this.field}});
         return data;
     }
     async undoTransaction() {
-        const { data } = await this.updateFunction({ variables: { _id: this.listID, direction: 0, state: this.state}});
+        const { data } = await this.updateFunction({ variables: { _id: this.regionID, direction: 0, state: this.state, field: this.field}});
         return data;
     }
 }

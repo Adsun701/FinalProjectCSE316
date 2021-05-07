@@ -67,9 +67,16 @@ const MapViewer = (props) => {
 	const [canUndo, toggleCanUndo]						= useState(false);
 	const [canRedo, toggleCanRedo]						= useState(false);
 
+	const [nameAsc, toggleNameAsc] 				= useState(true);
+	const [capitalAsc, toggleCapitalAsc] 		= useState(true);
+	const [leaderAsc, toggleLeaderAsc] 			= useState(true);
+	const [flagAsc, toggleFlagAsc] 				= useState(true);
+	const [landmarksAsc, toggleLandmarksAsc]	= useState(true);
+
 	const [AddRegion] 					= useMutation(mutations.ADD_REGION);
 	const [DeleteRegion] 				= useMutation(mutations.DELETE_REGION);
 	const [UpdateRegionField]				= useMutation(mutations.UPDATE_REGION_FIELD);
+	const [SortRegions]					= useMutation(mutations.SORT_REGIONS);
 
 	const tpsUndo = async () => {
 		const retVal = await props.tps.undoTransaction();
@@ -131,8 +138,13 @@ const MapViewer = (props) => {
 		let transaction = new EditRegion_Transaction(regionID, field, prev, value, UpdateRegionField);
 		props.tps.addTransaction(transaction);
 		tpsRedo();
-
 	};
+
+	const sortRegions = async (regionID, dir, field) => {
+		let transaction = new SortRegions_Transaction(regionID, dir, JSON.stringify(parent.regions), field, SortRegions);
+		props.tps.addTransaction(transaction);
+		tpsRedo();
+	}
 
 	// Go to region viewer with selected region id.
 	const regionViewer = async (regionID) => {
@@ -203,6 +215,13 @@ const MapViewer = (props) => {
 					<TableHeader
 						addNewRegion={addNewRegion}
 						setShowDeleteRegion={setShowDeleteRegion}
+						sortRegions={sortRegions}
+						nameAsc={nameAsc} toggleNameAsc={toggleNameAsc}
+						capitalAsc={capitalAsc} toggleCapitalAsc={toggleCapitalAsc}
+						leaderAsc={leaderAsc} toggleLeaderAsc={toggleLeaderAsc}
+						flagAsc={flagAsc} toggleFlagAsc={toggleFlagAsc}
+						landmarksAsc={landmarksAsc} toggleLandmarksAsc={toggleLandmarksAsc}
+						currentParentId={currentParentId}
 					></TableHeader>
 					<TableContents parent={parent}
 						deleteRegion={deleteRegion} setCurrentRegion={setCurrentRegion} setShowDeleteRegion={setShowDeleteRegion}

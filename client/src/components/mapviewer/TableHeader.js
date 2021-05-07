@@ -13,7 +13,7 @@ const TableHeader = (props) => {
         <WRow className="table-header">
             <WCol size="3">
                 <WButton onClick={() => {
-                    props.sortRegions(props.nameAsc ? 1 : -1);
+                    props.sortRegions(props.currentParentId, props.nameAsc ? 1 : -1, "name");
                     props.toggleNameAsc(!props.nameAsc);
                 }
                 } className='table-header-section' wType="texted" >Name</WButton>
@@ -21,30 +21,30 @@ const TableHeader = (props) => {
 
             <WCol size="2">
                 <WButton onClick={() => {
-                    props.sortRegions(props.dateAsc ? 1 : -1);
-                    props.toggleDateAsc(!props.dateAsc);
+                    props.sortRegions(props.currentParentId, props.capitalAsc ? 1 : -1, "capital");
+                    props.toggleCapitalAsc(!props.capitalAsc);
                 }
                 } className='table-header-section' wType="texted">Capital</WButton>
             </WCol>
 
             <WCol size="2">
                 <WButton onClick={() => {
-                    props.sortRegions(props.statusAsc ? 1 : -1);
-                    props.toggleStatusAsc(!props.statusAsc);
+                    props.sortRegions(props.currentParentId, props.leaderAsc ? 1 : -1, "leader");
+                    props.toggleLeaderAsc(!props.leaderAsc);
                 }
                 } className='table-header-section' wType="texted" >Leader</WButton>
             </WCol>
             <WCol size="2">
                 <WButton onClick={() => {
-                    props.sortRegions(props.assignedToAsc ? 1 : -1);
-                    props.toggleAssignedToAsc(!props.assignedToAsc);
+                    props.sortRegions(props.currentParentId, props.flagAsc ? 1 : -1, "flag");
+                    props.toggleFlagAsc(!props.flagAsc);
                 }
                 } className='table-header-section' wType="texted" >Flag</WButton>
             </WCol>
             <WCol size="3">
             <WButton onClick={() => {
-                    props.sortRegions(props.assignedToAsc ? 1 : -1);
-                    props.toggleAssignedToAsc(!props.assignedToAsc);
+                    props.sortRegions(props.currentParentId, props.landmarksAsc ? 1 : -1, "landmarks");
+                    props.toggleLandmarksAsc(!props.landmarksAsc);
                 }
                 } className='table-header-section' wType="texted" >Landmarks</WButton>
             </WCol>
