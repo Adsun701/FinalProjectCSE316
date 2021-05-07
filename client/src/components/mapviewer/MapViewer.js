@@ -1,22 +1,22 @@
 import React, { useState } 	from 'react';
-import Logo 							from '../navbar/Logo';
-import NavbarOptions 					from '../navbar/NavbarOptions';
-import UpdateAccount 					from '../modals/Update';
-import DeleteRegionInList 				from '../modals/DeleteRegion';
-import { GET_DB_MAPS, GET_DB_REGION } 				from '../../cache/queries';
-import * as mutations 					from '../../cache/mutations';
-import { useMutation, useQuery } 		from '@apollo/client';
+import Logo 										from '../navbar/Logo';
+import NavbarOptions 								from '../navbar/NavbarOptions';
+import UpdateAccount 								from '../modals/Update';
+import DeleteRegionInList 							from '../modals/DeleteRegion';
+import { GET_DB_MAPS, GET_DB_REGION,
+			GET_DB_REGIONS_BY_PARENT } 				from '../../cache/queries';
+import * as mutations 								from '../../cache/mutations';
+import { useMutation, useQuery } 					from '@apollo/client';
 import { WButton, WRow, WCol, WNavbar, WNavItem } 	from 'wt-frontend';
-import { WLayout, WLHeader, WLMain, } from 'wt-frontend';
-import { useHistory, useParams } from 'react-router-dom';
-import TableContents from './TableContents';
-import TableHeader from './TableHeader';
+import { WLayout, WLHeader, WLMain, } 				from 'wt-frontend';
+import { useHistory, useParams }					from 'react-router-dom';
+import TableContents 								from './TableContents';
+import TableHeader 									from './TableHeader';
 import { 
 	UpdateListRegions_Transaction, 
 	EditRegion_Transaction,
-	SortRegions_Transaction,
-	jsTPS
-} 				from '../../utils/jsTPS';
+	SortRegions_Transaction
+} 													from '../../utils/jsTPS';
 
 
 const MapViewer = (props) => {
@@ -25,6 +25,9 @@ const MapViewer = (props) => {
 
 	// this can either be a map or a region.
 	let newParent = null;
+
+	// this is an array of regions.
+	let newRegions = [];
 
 	const auth = props.user === null ? false : true;
 
@@ -52,9 +55,16 @@ const MapViewer = (props) => {
 		if (newParent === null ) newParent = data.getRegionById;
 	}
 
-	let refetchRegions = useQuery(GET_DB_REGION, { variables: {_id: _id} })['refetch'];
+	// get all regions that have their parent as the parentId.
+	data = useQuery(GET_DB_REGIONS_BY_PARENT, {variables: {parentId: _id }})['data'];
+	if (data) {
+		newRegions = data.getRegionsByParent;
+	}
+
+	let refetchRegions = useQuery(GET_DB_REGIONS_BY_PARENT, { variables: {parentId: _id} })['refetch'];
 
 	const parent 										= (newParent ? newParent : null);
+	const regions										= (newRegions ? newRegions : []);
 	const currentParentId 								= _id;
 	const currentMapId 									= (parent && parent.map ? parent.map : _id);
 	const currentParentName 							= (parent === null ? '' : parent.name);
@@ -222,12 +232,14 @@ const MapViewer = (props) => {
 						flagAsc={flagAsc} toggleFlagAsc={toggleFlagAsc}
 						landmarksAsc={landmarksAsc} toggleLandmarksAsc={toggleLandmarksAsc}
 						currentParentId={currentParentId}
+						refetchMaps={refetchMaps} refetchRegions={refetchRegions}
 					></TableHeader>
-					<TableContents parent={parent}
+					<TableContents parent={parent} regions={regions}
 						deleteRegion={deleteRegion} setCurrentRegion={setCurrentRegion} setShowDeleteRegion={setShowDeleteRegion}
 						editRegion={editRegion}
 						regionViewer={regionViewer}
 						goToRegion={goToRegion}
+						currentParentRegions={currentParentRegions}
 					></TableContents>
 				</div>
 			</WLMain>

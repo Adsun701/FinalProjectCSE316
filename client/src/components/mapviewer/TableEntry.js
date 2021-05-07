@@ -1,26 +1,8 @@
 import React, { useState } from 'react';
-import { useMutation, useQuery } 		from '@apollo/client';
-import { WButton, WInput, WRow, WCol } from 'wt-frontend';
-import { GET_DB_REGION } 				from '../../cache/queries';
+import { WButton, WRow, WCol } from 'wt-frontend';
 
 const TableEntry = (props) => {
-
-    let newRegion = null;
-    const {data} = useQuery(GET_DB_REGION, { variables: {_id: props.regionId} });
-	if(data) newRegion = data.getRegionById;
-
-    const region = newRegion ? {
-            _id: newRegion._id,
-            name: newRegion.name,
-            capital: newRegion.capital,
-            leader: newRegion.leader,
-            flag: newRegion.flag,
-            landmarks: newRegion.landmarks,
-            regions: newRegion.regions,
-            parent: newRegion.parent,
-            map: newRegion.map,
-            ancestry: newRegion.ancestry
-        } : {};
+    const region = props.region;
     const _id = region ? region._id : '';
     const name = region ? region.name : '';
     const capital = region ? region.capital : '';
@@ -32,8 +14,6 @@ const TableEntry = (props) => {
     const [editingLeader, toggleLeaderEdit] = useState(false);
     const [editingFlag, toggleFlagEdit] = useState(false);
 
-    console.log(region.name);
-
     const handleNameEdit = (e) => {
         toggleNameEdit(false);
         const newName = e.target.value ? e.target.value : 'N/A';
@@ -42,7 +22,6 @@ const TableEntry = (props) => {
     };
 
     const handleCapitalEdit = (e) => {
-        //console.log(e);
         toggleCapitalEdit(false);
         const newCapital = e.target.value ? e.target.value : 'N/A';
         const prevCapital = capital;
@@ -83,7 +62,7 @@ const TableEntry = (props) => {
                             wType="outlined" barAnimation="solid" inputClass="table-input-class"
                         />
                         : <div className="table-text"
-                            onClick={() => toggleNameEdit(!editingName)}
+                            //onClick={() => toggleNameEdit(!editingName)}
                             onDoubleClick={() => {props.goToRegion(_id)}}
                         >{name}
                         </div>
@@ -135,7 +114,7 @@ const TableEntry = (props) => {
                 {
                     <div className="table-text"
                         onClick={() => props.regionViewer(_id) }
-                    >{region.landmarks && region.landmarks.length > 0 ? region.landmarks[0] : "No Landmarks"}
+                    >{landmarks && landmarks.length > 0 ? landmarks[0] : "No Landmarks"}
                     </div>
                 }
             </WCol>

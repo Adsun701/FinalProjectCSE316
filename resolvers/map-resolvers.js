@@ -40,6 +40,17 @@ module.exports = {
 			const region = await Region.findOne({_id: objectId});
 			if(region) return region;
 			else return ({});
+		},
+		/** 
+		 	@param 	 {object} args - a parent id
+			@returns {array} an array of regions on success and an empty array on failure
+		**/
+		getRegionsByParent: async (_, args) => {
+			const { parentId } = args;
+			const objectId = new ObjectId(parentId);
+			const regions = await Region.find({parent: objectId});
+			if (regions) return regions;
+			else return ([]);
 		}
 	},
 	Mutation: {
@@ -247,18 +258,6 @@ module.exports = {
 			const parentId = new ObjectId(_id);
 			let arr = [];
 
-
-			const getRegion = async (_id) => {
-				let region = Region.findOne({_id: _id});
-				return region;
-			}
-
-			const getRegionName = async (_id) => {
-				let region = Region.findOne({_id: _id});
-				if (region.name) return region.name;
-				else return '';
-			}
-
 			let listRegions = null;
 			// search in maps.
 			const mapFound = await Map.findOne({_id: parentId});
@@ -327,9 +326,9 @@ module.exports = {
 				}
                 else listRegions = JSON.parse(state);
             }
-			let updated = await Map.updateOne({_id: parentId}, { regions: listRegions });
-			updated = await Region.updateOne({_id: parentId}, { regions: listRegions });
-			if(updated) return (listRegions);
+			const mapUpdated = await Map.updateOne({_id: parentId}, { regions: listRegions });
+			const regionUpdated = await Region.updateOne({_id: parentId}, { regions: listRegions });
+			if(mapUpdated || regionUpdated) return (listRegions);
 			// return old ordering if reorder was unsuccessful
 			listRegions = JSON.parse(state);
 			return (listRegions);
