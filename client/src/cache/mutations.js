@@ -129,3 +129,15 @@ export const RENAME_MAP = gql`
 		renameMap(map: $map, _id: $_id)
 	}
 `;
+
+export const ADD_LANDMARK = gql`
+	mutation AddLandmark($newLandmark: String!, $regionId: String!, $index: Int!) {
+		addLandmark(newLandmark: $newLandmark, regionId: $regionId, index: $index)
+	}
+`;
+
+export const DELETE_LANDMARK = gql`
+	mutation DeleteLandmark($landmark: String!, $regionId: String!) {
+		deleteLandmark(landmark: $landmark, regionId: $regionId)
+	}
+`;

@@ -2,12 +2,17 @@ import React, { useState } 	from 'react';
 import Logo 							from '../navbar/Logo';
 import NavbarOptions 					from '../navbar/NavbarOptions';
 import UpdateAccount 					from '../modals/Update';
+import DeleteLandmarkInRegion			from '../modals/DeleteLandmark';
 import { GET_DB_MAPS, GET_DB_REGION, GET_DB_REGIONS_BY_PARENT } 				from '../../cache/queries';
-import { useQuery } 		from '@apollo/client';
+import { useQuery, useMutation } 		from '@apollo/client';
+import * as mutations 								from '../../cache/mutations';
 import { WButton, WRow, WCol, WNavbar, WNavItem } 	from 'wt-frontend';
 import { WLayout, WLHeader, WLMain, WLSide } from 'wt-frontend';
 import { useHistory, useParams } from 'react-router-dom';
 import LandmarkContents from './LandmarkContents';
+import { 
+	UpdateListLandmarks_Transaction
+} 													from '../../utils/jsTPS';
 
 
 const RegionViewer = (props) => {
@@ -47,7 +52,7 @@ const RegionViewer = (props) => {
 			}
 		});
 	}
-
+	let refetchRegion = useQuery(GET_DB_REGION, {variables: {_id: _id} })['refetch'];
 	let refetchRegions = useQuery(GET_DB_REGIONS_BY_PARENT, { variables: {parentId: _id} })['refetch'];
 
 
@@ -59,9 +64,15 @@ const RegionViewer = (props) => {
     const currentRegionCapital                          = (region && region.capital ? region.capital : 'N/A');
     const currentRegionLeader                           = (region && region.leader ? region.leader : 'N/A');
     const currentRegionRegions							= (region && region.regions ? region.regions : []);
+	const [currentLandmark, setCurrentLandmark]			= useState('');
     const [showUpdate, toggleShowUpdate]    			= useState(false);
+	const [showDeleteLandmark, toggleShowDeleteLandmark] = useState(false);
 	const [canUndo, toggleCanUndo]						= useState(props.tps.hasTransactionToUndo() ? true : false);
 	const [canRedo, toggleCanRedo]						= useState(props.tps.hasTransactionToRedo() ? true : false);
+	const [AddLandmark] 								= useMutation(mutations.ADD_LANDMARK);
+	const [DeleteLandmark] 								= useMutation(mutations.DELETE_LANDMARK);
+
+	const [landmarkInput, updateLandmarkInput]			= useState('');
 
 	/**
 	const editRegion = async (regionID, field, value, prev) => {
@@ -75,6 +86,7 @@ const RegionViewer = (props) => {
 
 	const tpsUndo = async () => {
 		const retVal = await props.tps.undoTransaction();
+		refetchRegion();
 		refetchRegions();
 		if (props.tps.hasTransactionToRedo()) toggleCanRedo(true);
 		else toggleCanRedo(false);
@@ -85,6 +97,7 @@ const RegionViewer = (props) => {
 
 	const tpsRedo = async () => {
 		const retVal = await props.tps.doTransaction();
+		refetchRegion();
 		refetchRegions();
 		if (props.tps.hasTransactionToRedo()) toggleCanRedo(true);
 		else toggleCanRedo(false);
@@ -100,8 +113,20 @@ const RegionViewer = (props) => {
 		return retVal;
 	}
 
-	const addLandmark = async () => {
+	// landmark functions
 
+	const addLandmark = async (newLandmark, regionId) => {
+		if (!newLandmark || newLandmark === '') return;
+		let transaction = new UpdateListLandmarks_Transaction(newLandmark, regionId, 1, AddLandmark, DeleteLandmark);
+		props.tps.addTransaction(transaction);
+		tpsRedo();
+		updateLandmarkInput('');
+	}
+
+	const deleteLandmark = async (landmark, regionId) => {
+		let transaction = new UpdateListLandmarks_Transaction(landmark, regionId, 0, AddLandmark, DeleteLandmark);
+		props.tps.addTransaction(transaction);
+		tpsRedo();
 	}
 
 	/*
@@ -110,8 +135,15 @@ const RegionViewer = (props) => {
 		a modal manager that handles which to show.
 	*/
 
-	const setShowUpdate = () => {
+	const setShowUpdate = async () => {
+		toggleShowDeleteLandmark(false);
 		toggleShowUpdate(!showUpdate);
+	};
+
+	const setShowDeleteLandmark = async (landmark) => {
+		toggleShowUpdate(false);
+		toggleShowDeleteLandmark(!showDeleteLandmark);
+		setCurrentLandmark(landmark);
 	};
 
 	return (
@@ -171,10 +203,11 @@ const RegionViewer = (props) => {
                                 Region Landmarks:
                             </WCol>
                         </WRow>
-						<LandmarkContents region={region} currentRegionId={currentRegionId} currentMapId={currentMapId}></LandmarkContents>
+						<LandmarkContents region={region} currentRegionId={currentRegionId} currentMapId={currentMapId}
+							setShowDeleteLandmark={setShowDeleteLandmark}></LandmarkContents>
 						<WRow className='landmark-footer'>
 							<WCol size='1'>
-								<WButton className="map-entry-buttons" onClick={() => {addLandmark();}} wType="texted">
+								<WButton className="map-entry-buttons" onClick={() => {addLandmark(landmarkInput, currentRegionId);}} wType="texted">
                                     <i className="material-icons add-button">add</i>
 								</WButton>
 							</WCol>
@@ -183,6 +216,7 @@ const RegionViewer = (props) => {
                         			className='landmark-input table-input'
                        			 	autoFocus={true} type='text'
                         			wType="outlined" barAnimation="solid" inputClass="table-input-class"
+									onChange={(e) => {updateLandmarkInput(e.target.value);}}
                    			 	/>
 							</wCol>
 						</WRow>
@@ -190,7 +224,11 @@ const RegionViewer = (props) => {
                 </WRow>
 			</WLMain>
 			{
-				showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} userId={props.user._id}/>)
+				showUpdate && (<UpdateAccount fetchUser={props.fetchUser} setShowUpdate={setShowUpdate} userId={props.user._id} currentRegionId={currentRegionId}/>)
+			}
+			{
+				showDeleteLandmark && (<DeleteLandmarkInRegion fetchUser={props.fetchUser} setShowDeleteLandmark={setShowDeleteLandmark}
+					currentRegionId={currentRegionId} landmark={currentLandmark} deleteLandmark={deleteLandmark}/>)
 			}
 
 		</WLayout>

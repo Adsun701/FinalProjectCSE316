@@ -93,7 +93,42 @@ export class UpdateListRegions_Transaction extends jsTPS_Transaction {
     }
 }
 
-
+/*  Handles create/delete of landmarks. */
+export class UpdateListLandmarks_Transaction extends jsTPS_Transaction {
+    // opcodes: 0 - delete, 1 - add 
+    constructor(landmark, regionID, opcode, addfunc, delfunc, index = -1) {
+        super();
+        this.landmark = landmark;
+		this.regionID = regionID;
+        this.addFunction = addfunc;
+        this.deleteFunction = delfunc;
+        this.opcode = opcode;
+	    this.index = index;
+    }
+    async doTransaction() {
+		let data;
+        this.opcode === 0 ? { data } = await this.deleteFunction({
+							variables: {landmark: this.landmark, regionId: this.regionID}})
+						  : { data } = await this.addFunction({
+							variables: {newLandmark: this.landmark, regionId: this.regionID, index: this.index}})  
+		if(this.opcode !== 1) {
+            this.index = data.deleteLandmark;
+		}
+		return data;
+    }
+    // Since delete/add are opposites, flip matching opcode
+    async undoTransaction() {
+		let data;
+        this.opcode === 1 ? { data } = await this.deleteFunction({
+							variables: {landmark: this.landmark, regionId: this.regionID}})
+                          : { data } = await this.addFunction({
+							variables: {newLandmark: this.landmark, regionId: this.regionID, index: this.index}})
+		if(this.opcode !== 0) {
+            this.index = data.deleteLandmark;
+        }
+		return data;
+    }
+}
 
 
 export class jsTPS {

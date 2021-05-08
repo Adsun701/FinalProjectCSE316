@@ -1,9 +1,9 @@
 import React        from 'react';
 import LandmarkEntry   from './LandmarkEntry';
-import { WButton, WRow, WCol } from 'wt-frontend';
 
 const LandmarkContents = (props) => {
-    const entries = props && props.regions && props.regions.landmarks ? props.regions.landmarks : [];
+    console.log(props);
+    const entries = props && props.region && props.region.landmarks ? props.region.landmarks : [];
     return (
         entries ? <div className='landmark-container table-entries container-primary'>
             {
@@ -11,8 +11,7 @@ const LandmarkContents = (props) => {
                     <LandmarkEntry
                         landmark={entry}
                         key={entry}
-                        regionId={props.regionId}
-                        setShowdeleteLandmark={props.setShowDeleteLandmark}
+                        setShowDeleteLandmark={props.setShowDeleteLandmark}
                         index={index}
                     />
                 ))

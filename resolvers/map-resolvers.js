@@ -352,6 +352,36 @@ module.exports = {
 			// return old ordering if reorder was unsuccessful
 			arr = JSON.parse(state);
 			return (arr);
+		},
+		/** 
+		 	@param 	 {object} args - a landmark object, and a region id, as well as an index.
+			@returns {boolean} true if landmark was successfully added, otherwise false.
+		**/
+		addLandmark: async(_, args) => {
+			const { newLandmark, regionId, index } = args;
+			const region = await Region.findOne({_id: regionId});
+			if (!region) return false;
+			let landmarks = region.landmarks;
+			if (index === -1) landmarks.push(newLandmark);
+			else landmarks.splice(index, 0, newLandmark);
+			const updated = await Region.updateOne({_id: regionId}, {landmarks: landmarks});
+			return updated ? true : false;
+		},
+		/** 
+		 	@param 	 {object} args - a landmark object, and a region id.
+			@returns {number} index of string that was deleted, or -1 if it doesn't exist or the region was not updated.
+		**/
+		deleteLandmark: async(_, args) => {
+			const { landmark, regionId } = args;
+			const region = await Region.findOne({_id: regionId});
+			if (!region) return false;
+			let landmarks = region.landmarks;
+			let index = landmarks.findIndex((s) => s === landmark);
+			if (index === -1) return index;
+			else landmarks = landmarks.filter((s) => s !== landmark);
+			const updated = await Region.updateOne({_id: regionId}, {landmarks: landmarks});
+			if (updated) return index;
+			else return -1;
 		}
 	}
 }
