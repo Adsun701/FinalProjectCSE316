@@ -53,6 +53,7 @@ const MapViewer = (props) => {
 	data = useQuery(GET_DB_REGION, { variables: {_id: _id} })['data'];
 	if (data) {
 		if (newParent === null ) newParent = data.getRegionById;
+		console.log(newParent);
 	}
 
 	// get all regions that have their parent as the parentId.

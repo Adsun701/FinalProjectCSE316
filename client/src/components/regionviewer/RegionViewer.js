@@ -7,6 +7,7 @@ import { useQuery } 		from '@apollo/client';
 import { WButton, WRow, WCol, WNavbar, WNavItem } 	from 'wt-frontend';
 import { WLayout, WLHeader, WLMain, WLSide } from 'wt-frontend';
 import { useHistory, useParams } from 'react-router-dom';
+import LandmarkContents from './LandmarkContents';
 
 
 const RegionViewer = (props) => {
@@ -99,6 +100,9 @@ const RegionViewer = (props) => {
 		return retVal;
 	}
 
+	const addLandmark = async () => {
+
+	}
 
 	/*
 		Since we only have 3 modals, this sort of hardcoding isnt an issue, if there
@@ -166,8 +170,22 @@ const RegionViewer = (props) => {
                             <WCol size='12' className='region-landmarks-header'>
                                 Region Landmarks:
                             </WCol>
-
                         </WRow>
+						<LandmarkContents region={region} currentRegionId={currentRegionId} currentMapId={currentMapId}></LandmarkContents>
+						<WRow className='landmark-footer'>
+							<WCol size='1'>
+								<WButton className="map-entry-buttons" onClick={() => {addLandmark();}} wType="texted">
+                                    <i className="material-icons add-button">add</i>
+								</WButton>
+							</WCol>
+							<wCol size='6'>
+								<input
+                        			className='landmark-input table-input'
+                       			 	autoFocus={true} type='text'
+                        			wType="outlined" barAnimation="solid" inputClass="table-input-class"
+                   			 	/>
+							</wCol>
+						</WRow>
                     </WCol>
                 </WRow>
 			</WLMain>

@@ -295,7 +295,7 @@ html, body {
 }
 
 .add-button {
-    color: green;
+    color: rgb(87, 201, 87);
 }
 
 .region-description {
@@ -311,4 +311,17 @@ html, body {
 
 .name-of-region-parent {
     color: var(--light-blue);
+}
+
+.landmark-container {
+    background-color: var(--pure-black);
+}
+
+.landmark-footer {
+    background-color: var(--blue-gray);
+}
+
+.landmark-input {
+    background-color: var(--warm-white);
+    color: var(--pure-black);
 }
