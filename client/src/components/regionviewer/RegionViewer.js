@@ -156,6 +156,14 @@ const RegionViewer = (props) => {
 						</WNavItem>
 					</ul>
 					<ul>
+						<WButton className="map-entry-buttons" onClick={() => {}} wType="texted">
+							<i className="region-navigation-arrows material-icons" style={{opacity : true ? '1' : '1'}}>arrow_back</i>
+						</WButton>
+						<WButton className="map-entry-buttons" onClick={() => {}} wType="texted">
+							<i className="region-navigation-arrows material-icons" style={{opacity : true ? '1' : '1'}}>arrow_forward</i>
+						</WButton>
+					</ul>
+					<ul>
 						<NavbarOptions
                             fetchUser={props.fetchUser} auth={auth}
                             refetchMaps={refetch}
