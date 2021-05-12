@@ -17,6 +17,8 @@ import {
 
 const RegionViewer = (props) => {
 
+	let inputRef = React.createRef();
+
 	let {_id} = useParams();
 
 	// this is always a region.
@@ -128,6 +130,7 @@ const RegionViewer = (props) => {
 		props.tps.addTransaction(transaction);
 		tpsRedo();
 		updateLandmarkInput('');
+		inputRef.current.value = '';
 	}
 
 	const deleteLandmark = async (landmark, regionId) => {
@@ -236,7 +239,7 @@ const RegionViewer = (props) => {
 								</WButton>
 							</WCol>
 							<wCol size='6'>
-								<input
+								<input ref={inputRef}
                         			className='landmark-input table-input'
                        			 	autoFocus={true} type='text'
                         			wType="outlined" barAnimation="solid" inputClass="table-input-class"
