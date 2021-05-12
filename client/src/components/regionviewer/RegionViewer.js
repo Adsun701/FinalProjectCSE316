@@ -125,6 +125,7 @@ const RegionViewer = (props) => {
 	// landmark functions
 
 	const addLandmark = async (newLandmark, regionId) => {
+		if (region.landmarks.includes(newLandmark)) return;
 		if (!newLandmark || newLandmark === '') return;
 		let transaction = new UpdateListLandmarks_Transaction(newLandmark, regionId, 1, AddLandmark, DeleteLandmark);
 		props.tps.addTransaction(transaction);
@@ -235,7 +236,7 @@ const RegionViewer = (props) => {
 						<WRow className='landmark-footer'>
 							<WCol size='1'>
 								<WButton className="map-entry-buttons" onClick={() => {addLandmark(landmarkInput, currentRegionId);}} wType="texted">
-                                    <i className="material-icons add-button">add</i>
+                                    <i className="material-icons add-button" style={{opacity : landmarkInput !== '' && !region.landmarks.includes(landmarkInput) ? '1' : '0.5'}}>add</i>
 								</WButton>
 							</WCol>
 							<wCol size='6'>
