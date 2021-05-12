@@ -55,8 +55,15 @@ const RegionViewer = (props) => {
 	let refetchRegion = useQuery(GET_DB_REGION, {variables: {_id: _id} })['refetch'];
 	let refetchRegions = useQuery(GET_DB_REGIONS_BY_PARENT, { variables: {parentId: _id} })['refetch'];
 
+	// get coregions, so that moving from 1 region to a sibling region is possible.
+	data = useQuery(GET_DB_REGIONS_BY_PARENT, { variables: {parentId: newRegionParent ? newRegionParent._id : ''} })['data'];
+	let newRegions = null;
+	if (data) newRegions = data.getRegionsByParent;
 
 	const region 										= (newRegion ? newRegion : null);
+	const regions 										= (newRegions ? newRegions : []);
+	const regionsLength 								= (newRegions ? newRegions.length : -1);
+	const index											= regions.findIndex((r) => r._id === _id);
 	const currentRegionId 								= _id;
 	const currentMapId 									= (region && region.map ? region.map : _id);
 	const currentRegionName 							= (region && region.name ? region.name : '');
@@ -146,6 +153,15 @@ const RegionViewer = (props) => {
 		setCurrentLandmark(landmark);
 	};
 
+	const navigateToRegion = async(index, length) => {
+		let regionId = null;
+		if (index < 0 || index >= length) return;
+		else {
+			regionId = regions[index]._id;
+			history.push("/view/" + regionId, { _id: regionId });
+		}
+	}
+
 	return (
 		<WLayout wLayout="header">
 			<WLHeader>
@@ -156,11 +172,11 @@ const RegionViewer = (props) => {
 						</WNavItem>
 					</ul>
 					<ul>
-						<WButton className="map-entry-buttons" onClick={() => {}} wType="texted">
-							<i className="region-navigation-arrows material-icons" style={{opacity : true ? '1' : '1'}}>arrow_back</i>
+						<WButton className="map-entry-buttons" onClick={() => {navigateToRegion(index - 1, regionsLength);}} wType="texted">
+							<i className="region-navigation-arrows material-icons" style={{opacity : index > 0 ? '1' : '0.5'}}>arrow_back</i>
 						</WButton>
-						<WButton className="map-entry-buttons" onClick={() => {}} wType="texted">
-							<i className="region-navigation-arrows material-icons" style={{opacity : true ? '1' : '1'}}>arrow_forward</i>
+						<WButton className="map-entry-buttons" onClick={() => {navigateToRegion(index + 1, regionsLength)}} wType="texted">
+							<i className="region-navigation-arrows material-icons" style={{opacity : index < regionsLength - 1 ? '1' : '0.5'}}>arrow_forward</i>
 						</WButton>
 					</ul>
 					<ul>
