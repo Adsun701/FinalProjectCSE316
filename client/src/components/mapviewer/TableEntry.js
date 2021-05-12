@@ -69,7 +69,7 @@ const TableEntry = (props) => {
                     <i className="material-icons">close</i>
                 </WButton>
             </WCol>
-            <WCol size="2">
+            <WCol onDoubleClick={() => {props.goToRegion(_id)}} size="2">
                 {
                     editingName || name === ''
                         ? <input
@@ -79,7 +79,6 @@ const TableEntry = (props) => {
                         />
                         : <div className="table-text"
                             onClick={() => toggleNameEdit(!editingName)}
-                            onDoubleClick={() => {props.goToRegion(_id)}}
                         >{name}
                         </div>
                 }
