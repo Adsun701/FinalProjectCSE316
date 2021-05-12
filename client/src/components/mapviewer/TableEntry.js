@@ -30,6 +30,7 @@ const TableEntry = (props) => {
         toggleNameEdit(false);
         const newName = e.target.value ? e.target.value : 'N/A';
         const prevName = name;
+        if (newName === prevName) return;
         props.editRegion(_id, 'name', newName, prevName);
     };
 
@@ -37,6 +38,7 @@ const TableEntry = (props) => {
         toggleCapitalEdit(false);
         const newCapital = e.target.value ? e.target.value : 'N/A';
         const prevCapital = capital;
+        if (newCapital === prevCapital) return;
         props.editRegion(_id, 'capital', newCapital, prevCapital);
     };
 
@@ -44,6 +46,7 @@ const TableEntry = (props) => {
         toggleLeaderEdit(false);
         const newLeader = e.target.value ? e.target.value : 'N/A';
         const prevLeader = leader;
+        if (newLeader === prevLeader) return;
         props.editRegion(_id, 'leader', newLeader, prevLeader);
     };
 
@@ -51,6 +54,7 @@ const TableEntry = (props) => {
         toggleFlagEdit(false);
         const newFlag = e.target.value ? e.target.value : 'N/A';
         const prevFlag = flag;
+        if (newFlag === prevFlag) return;
         props.editRegion(_id, 'flag', newFlag, prevFlag);
     };
 
