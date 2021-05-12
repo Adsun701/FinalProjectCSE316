@@ -76,6 +76,7 @@ const TableEntry = (props) => {
                             className='table-input' onBlur={handleNameEdit}
                             autoFocus={true} defaultValue={name} type='text'
                             wType="outlined" barAnimation="solid" inputClass="table-input-class"
+                            onKeyDown={(e) => {if (e.key === 'Enter') handleNameEdit(e);}}
                         />
                         : <div className="table-text"
                             onClick={() => toggleNameEdit(!editingName)}
@@ -90,6 +91,7 @@ const TableEntry = (props) => {
                         className='table-input' onBlur={handleCapitalEdit}
                         autoFocus={true} defaultValue={capital} type='text'
                         wType="outlined" barAnimation="solid" inputClass="table-input-class"
+                        onKeyDown={(e) => {if (e.key === 'Enter') handleCapitalEdit(e);}}
                     />
                         : <div className="table-text"
                             onClick={() => toggleCapitalEdit(!editingCapital)}
@@ -104,6 +106,7 @@ const TableEntry = (props) => {
                         className='table-input' onBlur={handleLeaderEdit}
                         autoFocus={true} defaultValue={leader} type='text'
                         wType="outlined" barAnimation="solid" inputClass="table-input-class"
+                        onKeyDown={(e) => {if (e.key === 'Enter') handleLeaderEdit(e);}}
                     />
                         : <div className="table-text"
                             onClick={() => toggleLeaderEdit(!editingLeader)}
@@ -118,6 +121,7 @@ const TableEntry = (props) => {
                         className='table-input' onBlur={handleFlagEdit}
                         autoFocus={true} defaultValue={flag} type='text'
                         wType="outlined" barAnimation="solid" inputClass="table-input-class"
+                        onKeyDown={(e) => {if (e.key === 'Enter') handleFlagEdit(e);}}
                     />
                         : <div className="table-text"
                             onClick={() => toggleFlagEdit(!editingFlag)}
