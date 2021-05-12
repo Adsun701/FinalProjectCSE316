@@ -76,7 +76,17 @@ const TableEntry = (props) => {
                             className='table-input' onBlur={handleNameEdit}
                             autoFocus={true} defaultValue={name} type='text'
                             wType="outlined" barAnimation="solid" inputClass="table-input-class"
-                            onKeyDown={(e) => {if (e.key === 'Enter') handleNameEdit(e);}}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleNameEdit(e);
+                                else if (e.key === 'Escape') {
+                                    e.target.value = name;
+                                    toggleNameEdit(false);
+                                }
+                                else if (e.key === 'ArrowRight') {
+                                    handleNameEdit(e);
+                                    toggleCapitalEdit(!editingCapital);
+                                }
+                            }}
                         />
                         : <div className="table-text"
                             onClick={() => toggleNameEdit(!editingName)}
@@ -91,7 +101,21 @@ const TableEntry = (props) => {
                         className='table-input' onBlur={handleCapitalEdit}
                         autoFocus={true} defaultValue={capital} type='text'
                         wType="outlined" barAnimation="solid" inputClass="table-input-class"
-                        onKeyDown={(e) => {if (e.key === 'Enter') handleCapitalEdit(e);}}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleCapitalEdit(e);
+                            else if (e.key === 'Escape') {
+                                e.target.value = name;
+                                toggleCapitalEdit(false);
+                            }
+                            else if (e.key === 'ArrowLeft') {
+                                handleCapitalEdit(e);
+                                toggleNameEdit(!editingName);
+                            }
+                            else if (e.key === 'ArrowRight') {
+                                handleCapitalEdit(e);
+                                toggleLeaderEdit(!editingLeader);
+                            }
+                        }}
                     />
                         : <div className="table-text"
                             onClick={() => toggleCapitalEdit(!editingCapital)}
@@ -106,7 +130,21 @@ const TableEntry = (props) => {
                         className='table-input' onBlur={handleLeaderEdit}
                         autoFocus={true} defaultValue={leader} type='text'
                         wType="outlined" barAnimation="solid" inputClass="table-input-class"
-                        onKeyDown={(e) => {if (e.key === 'Enter') handleLeaderEdit(e);}}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleLeaderEdit(e);
+                            else if (e.key === 'Escape') {
+                                e.target.value = name;
+                                toggleLeaderEdit(false);
+                            }
+                            else if (e.key === 'ArrowLeft') {
+                                handleLeaderEdit(e);
+                                toggleCapitalEdit(!editingCapital);
+                            }
+                            else if (e.key === 'ArrowRight') {
+                                handleLeaderEdit(e);
+                                toggleFlagEdit(!editingFlag);
+                            }
+                        }}
                     />
                         : <div className="table-text"
                             onClick={() => toggleLeaderEdit(!editingLeader)}
@@ -121,7 +159,17 @@ const TableEntry = (props) => {
                         className='table-input' onBlur={handleFlagEdit}
                         autoFocus={true} defaultValue={flag} type='text'
                         wType="outlined" barAnimation="solid" inputClass="table-input-class"
-                        onKeyDown={(e) => {if (e.key === 'Enter') handleFlagEdit(e);}}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleFlagEdit(e);
+                            else if (e.key === 'Escape') {
+                                e.target.value = name;
+                                toggleFlagEdit(false);
+                            }
+                            else if (e.key === 'ArrowLeft') {
+                                handleFlagEdit(e);
+                                toggleLeaderEdit(!editingLeader);
+                            }
+                        }}
                     />
                         : <div className="table-text"
                             onClick={() => toggleFlagEdit(!editingFlag)}
