@@ -132,13 +132,14 @@ html, body {
 
 .table-entry {
     border-bottom: 1px solid;
-    color: $text-color;
+    background-color: var(--light-gray);
+    color: var(--warm-black);
     transition: 0.1s ease-in-out;
     height: 46px;
 }
 
 .table-entry:hover {
-    background-color: var(--warm-white-transparent);
+    background-color: var(--blue-gray);
 }
 
 .table-header-button {
@@ -191,7 +192,8 @@ html, body {
 }
 
 .table-text:hover {
-    background-color: darken($background-color, 50%);
+    background-color: darken(#7e8084, 20%);
+    color: var(--warm-white);
 }
 
 .modal-header {
