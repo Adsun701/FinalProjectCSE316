@@ -3,7 +3,7 @@ import Logo 							from '../navbar/Logo';
 import NavbarOptions 					from '../navbar/NavbarOptions';
 import UpdateAccount 					from '../modals/Update';
 import DeleteLandmarkInRegion			from '../modals/DeleteLandmark';
-import { GET_DB_MAPS, GET_DB_REGION, GET_DB_REGIONS_BY_PARENT } 				from '../../cache/queries';
+import { GET_DB_MAPS, GET_DB_REGION, GET_DB_REGIONS_BY_PARENT, GET_DB_NAMES_FROM_ANCESTRY } 				from '../../cache/queries';
 import { useQuery, useMutation } 		from '@apollo/client';
 import * as mutations 								from '../../cache/mutations';
 import { WButton, WRow, WCol, WNavbar, WNavItem } 	from 'wt-frontend';
@@ -62,6 +62,12 @@ const RegionViewer = (props) => {
 	let newRegions = null;
 	if (data) newRegions = data.getRegionsByParent;
 
+	let newAncestry = null;
+	data = useQuery(GET_DB_NAMES_FROM_ANCESTRY, {variables: {ancestry : newRegion ? newRegion.ancestry : []} })['data'];
+	if (data) {
+		newAncestry = data.getNamesFromAncestry;
+	}
+
 	const region 										= (newRegion ? newRegion : null);
 	const regions 										= (newRegions ? newRegions : []);
 	const regionsLength 								= (newRegions ? newRegions.length : -1);
@@ -73,6 +79,7 @@ const RegionViewer = (props) => {
     const currentRegionCapital                          = (region && region.capital ? region.capital : 'N/A');
     const currentRegionLeader                           = (region && region.leader ? region.leader : 'N/A');
     const currentRegionRegions							= (region && region.regions ? region.regions : []);
+	const ancestry										= (newAncestry ? newAncestry : []);
 	const [currentLandmark, setCurrentLandmark]			= useState('');
     const [showUpdate, toggleShowUpdate]    			= useState(false);
 	const [showDeleteLandmark, toggleShowDeleteLandmark] = useState(false);
@@ -166,6 +173,11 @@ const RegionViewer = (props) => {
 		}
 	}
 
+	// go to another region.
+	const goToRegion = async (regionID) => {
+		history.push("/map/" + regionID, { _id: regionID });
+	}
+
 	return (
 		<WLayout wLayout="header">
 			<WLHeader>
@@ -174,6 +186,13 @@ const RegionViewer = (props) => {
 						<WNavItem>
 							<Logo className='logo' tpsReset={tpsReset}/>
 						</WNavItem>
+					</ul>
+					<ul>
+						{
+							ancestry && ancestry.map((name, index) => <WNavItem
+								onClick={() => {goToRegion(region.ancestry[index]);}}
+							>{name}{(index < ancestry.length - 1) ? <i className="material-icons">arrow_forward_ios</i> : <i/>}</WNavItem>)
+						}
 					</ul>
 					<ul>
 						<WButton className="map-entry-buttons" onClick={() => {navigateToRegion(index - 1, regionsLength);}} wType="texted">
