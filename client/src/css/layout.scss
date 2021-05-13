@@ -223,7 +223,14 @@ html {
 }
 
 .map-list {
-    width: 1200px;
+    text-align: center;
+    width: 50%;
+    height: 65%;
+    margin: auto;
+}
+
+.map-list-main {
+    align-content: center;
 }
 
 .map-list-header {
@@ -233,11 +240,16 @@ html {
     position: relative;
 }
 
-.map-list-side {
-    font-size: 1rem;
-    font-family: Arial;
+.create-map-button {
+    background-color: rgb(167, 51, 51);
+    color: var(--warm-white);
     text-align: center;
-    position: relative;
+    margin-top: 27%;
+    width: 91%;
+}
+
+.create-map-button:hover {
+    background-color: rgb(110, 43, 43);
 }
 
 .landmark-input {

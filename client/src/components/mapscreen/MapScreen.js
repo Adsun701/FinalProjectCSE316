@@ -137,12 +137,12 @@ const MapScreen = (props) => {
 	}
 
 	return (
-		<WLayout wLayout="header-lside">
+		<WLayout wLayout="header">
 			<WLHeader>
 				<WNavbar color="colored">
 					<ul>
 						<WNavItem>
-							<Logo className='logo' />
+							<Logo className='logo' tpsReset={()=>{}}/>
 						</WNavItem>
 					</ul>
 					<ul>
@@ -154,7 +154,7 @@ const MapScreen = (props) => {
 					</ul>
 				</WNavbar>
 			</WLHeader>
-			<WLMain><Maps
+			<WLMain class='map-list'><Maps
 				maps={maps} createNewMap={createNewMap} setShowDelete={setShowDelete}  setShowMap={setShowMap} setShowRename={setShowRename}
 			/></WLMain>
 
