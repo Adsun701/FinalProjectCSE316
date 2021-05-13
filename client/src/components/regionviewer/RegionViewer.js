@@ -239,14 +239,14 @@ const RegionViewer = (props) => {
                                     <i className="material-icons add-button" style={{opacity : landmarkInput !== '' && !region.landmarks.includes(landmarkInput) ? '1' : '0.5'}}>add</i>
 								</WButton>
 							</WCol>
-							<wCol size='6'>
+							<WCol size='6'>
 								<input ref={inputRef}
                         			className='landmark-input table-input'
                        			 	autoFocus={true} type='text'
                         			wType="outlined" barAnimation="solid" inputClass="table-input-class"
 									onChange={(e) => {updateLandmarkInput(e.target.value);}}
                    			 	/>
-							</wCol>
+							</WCol>
 						</WRow>
                     </WCol>
                 </WRow>

@@ -54,3 +54,9 @@ export const GET_DB_REGIONS_BY_PARENT = gql`
 		}
 	}
 `;
+
+export const GET_DB_NAMES_FROM_ANCESTRY = gql`
+	query GetDBNamesFromAncestry($ancestry: [String]) {
+		getNamesFromAncestry(ancestry: $ancestry)
+	}
+`;

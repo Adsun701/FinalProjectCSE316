@@ -3,7 +3,7 @@ import Logo 										from '../navbar/Logo';
 import NavbarOptions 								from '../navbar/NavbarOptions';
 import UpdateAccount 								from '../modals/Update';
 import DeleteRegionInList 							from '../modals/DeleteRegion';
-import { GET_DB_MAPS, GET_DB_REGION,
+import { GET_DB_MAPS, GET_DB_NAMES_FROM_ANCESTRY, GET_DB_REGION,
 			GET_DB_REGIONS_BY_PARENT } 				from '../../cache/queries';
 import * as mutations 								from '../../cache/mutations';
 import { useMutation, useQuery } 					from '@apollo/client';
@@ -63,12 +63,19 @@ const MapViewer = (props) => {
 
 	let refetchRegions = useQuery(GET_DB_REGIONS_BY_PARENT, { variables: {parentId: _id} })['refetch'];
 
+	let newAncestry = null;
+	data = useQuery(GET_DB_NAMES_FROM_ANCESTRY, {variables: {ancestry : newParent ? newParent.ancestry : []} })['data'];
+	if (data) {
+		newAncestry = data.getNamesFromAncestry;
+	}
+
 	const parent						            	= newParent;
 	let regions          		    					= newRegions;
 	const currentParentId 								= _id;
 	const currentMapId 									= (parent && parent.map ? parent.map : _id);
 	const currentParentName 							= (parent === null ? '' : parent.name);
     const currentParentRegions							= (parent === null ? [] : parent.regions);
+	const ancestry 										= (newAncestry) ? newAncestry : [];
 	const [currentRegionIndex, setRegionIndex]			= useState(-1);
 	const [currentRegionId, setCurrentRegionId] 		= useState('');
 	const [currentRegion, setCurrentRegion] 			= useState({});
@@ -195,6 +202,13 @@ const MapViewer = (props) => {
 						<WNavItem>
 							<Logo tpsReset={tpsReset} className='logo'/>
 						</WNavItem>
+					</ul>
+					<ul>
+						{
+							ancestry && ancestry.map((name, index) => <WNavItem
+								onClick={() => {goToRegion(parent.ancestry[index]);}}
+							>{name}{(index < ancestry.length - 1) ? <i className="material-icons">arrow_forward_ios</i> : <i/>}</WNavItem>)
+						}
 					</ul>
 					<ul>
 						<NavbarOptions

@@ -65,6 +65,33 @@ module.exports = {
 				}
 			}
 			return regions;
+		},
+		/** 
+		 	@param 	 {object} args - a string of _ids, the first one being the map and all subsequent ones being regions.
+			@returns {array} an array of names on success, an empty array on failure.
+		**/
+		getNamesFromAncestry: async (_, args) => {
+			const { ancestry } = args;
+			const len = (!ancestry) ? -1 : ancestry.length;
+			if (len < 1) return [];
+			// get map id.
+			const mapId = ancestry[0];
+
+			// initialize array;
+			let arr = [];
+			// get map.
+			const map = await Map.findOne({_id: mapId});
+			arr.push(map.name);
+			// if only map, return array;
+			if (len === 1) return arr;
+			
+			// look for regions.
+			let region = null;
+			for (let i = 1; i < len; i++) {
+				region = await Region.findOne({_id: ancestry[i]});
+				arr.push(region.name);
+			}
+			return arr;
 		}
 	},
 	Mutation: {
