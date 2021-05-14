@@ -27,6 +27,8 @@ const TableEntry = (props) => {
     const [editingFlag, toggleFlagEdit] = useState(false);
 
     const handleNameEdit = (e) => {
+        props.setEditIndex(-1);
+        props.setEditField('');
         toggleNameEdit(false);
         const newName = e.target.value ? e.target.value : 'N/A';
         const prevName = name;
@@ -35,6 +37,8 @@ const TableEntry = (props) => {
     };
 
     const handleCapitalEdit = (e) => {
+        props.setEditIndex(-1);
+        props.setEditField('');
         toggleCapitalEdit(false);
         const newCapital = e.target.value ? e.target.value : 'N/A';
         const prevCapital = capital;
@@ -43,6 +47,8 @@ const TableEntry = (props) => {
     };
 
     const handleLeaderEdit = (e) => {
+        props.setEditIndex(-1);
+        props.setEditField('');
         toggleLeaderEdit(false);
         const newLeader = e.target.value ? e.target.value : 'N/A';
         const prevLeader = leader;
@@ -51,6 +57,8 @@ const TableEntry = (props) => {
     };
 
     const handleFlagEdit = (e) => {
+        props.setEditIndex(-1);
+        props.setEditField('');
         toggleFlagEdit(false);
         const newFlag = e.target.value ? e.target.value : 'N/A';
         const prevFlag = flag;
@@ -71,7 +79,7 @@ const TableEntry = (props) => {
             </WCol>
             <WCol onDoubleClick={() => {props.goToRegion(_id)}} size="2">
                 {
-                    editingName || name === ''
+                    (props.editing && props.editField === 'name') || editingName || name === ''
                         ? <input
                             className='table-input' onBlur={handleNameEdit}
                             autoFocus={true} defaultValue={name} type='text'
@@ -87,10 +95,14 @@ const TableEntry = (props) => {
                                     toggleCapitalEdit(!editingCapital);
                                 }
                                 else if (e.key === 'ArrowUp' && props.index > 0) {
-
+                                    handleNameEdit(e);
+                                    props.setEditIndex(props.index - 1);
+                                    props.setEditField('name');
                                 }
                                 else if (e.key === 'ArrowDown' && props.index < props.len - 1) {
-
+                                    handleNameEdit(e);
+                                    props.setEditIndex(props.index + 1);
+                                    props.setEditField('name');
                                 }
                             }}
                         />
@@ -103,7 +115,7 @@ const TableEntry = (props) => {
 
             <WCol size="2">
                 {
-                    editingCapital ? <input
+                    (props.editing && props.editField === 'capital') || editingCapital ? <input
                         className='table-input' onBlur={handleCapitalEdit}
                         autoFocus={true} defaultValue={capital} type='text'
                         wType="outlined" barAnimation="solid" inputClass="table-input-class"
@@ -122,10 +134,14 @@ const TableEntry = (props) => {
                                 toggleLeaderEdit(!editingLeader);
                             }
                             else if (e.key === 'ArrowUp' && props.index > 0) {
-
+                                handleCapitalEdit(e);
+                                props.setEditIndex(props.index - 1);
+                                props.setEditField('capital');
                             }
                             else if (e.key === 'ArrowDown' && props.index < props.len - 1) {
-
+                                handleCapitalEdit(e);
+                                props.setEditIndex(props.index + 1);
+                                props.setEditField('capital');
                             }
                         }}
                     />
@@ -138,7 +154,7 @@ const TableEntry = (props) => {
 
             <WCol size="2">
                 {
-                    editingLeader ? <input
+                    (props.editing && props.editField === 'leader') || editingLeader ? <input
                         className='table-input' onBlur={handleLeaderEdit}
                         autoFocus={true} defaultValue={leader} type='text'
                         wType="outlined" barAnimation="solid" inputClass="table-input-class"
@@ -157,10 +173,14 @@ const TableEntry = (props) => {
                                 toggleFlagEdit(!editingFlag);
                             }
                             else if (e.key === 'ArrowUp' && props.index > 0) {
-
+                                handleLeaderEdit(e);
+                                props.setEditIndex(props.index - 1);
+                                props.setEditField('leader');
                             }
                             else if (e.key === 'ArrowDown' && props.index < props.len - 1) {
-
+                                handleLeaderEdit(e);
+                                props.setEditIndex(props.index + 1);
+                                props.setEditField('leader');
                             }
                         }}
                     />
@@ -173,7 +193,7 @@ const TableEntry = (props) => {
 
             <WCol size="2">
                 {
-                    editingFlag ? <input
+                    (props.editing && props.editField === 'flag') || editingFlag ? <input
                         className='table-input' onBlur={handleFlagEdit}
                         autoFocus={true} defaultValue={flag} type='text'
                         wType="outlined" barAnimation="solid" inputClass="table-input-class"
@@ -188,10 +208,14 @@ const TableEntry = (props) => {
                                 toggleLeaderEdit(!editingLeader);
                             }
                             else if (e.key === 'ArrowUp' && props.index > 0) {
-
+                                handleFlagEdit(e);
+                                props.setEditIndex(props.index - 1);
+                                props.setEditField('flag');
                             }
                             else if (e.key === 'ArrowDown' && props.index < props.len - 1) {
-
+                                handleFlagEdit(e);
+                                props.setEditIndex(props.index + 1);
+                                props.setEditField('flag');
                             }
                         }}
                     />
