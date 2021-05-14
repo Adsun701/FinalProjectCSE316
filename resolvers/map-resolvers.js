@@ -47,6 +47,7 @@ module.exports = {
 		**/
 		getRegionsByParent: async (_, args) => {
 			const { parentId } = args;
+			if (parentId === '') return [];
 			const objectId = new ObjectId(parentId);
 			const map = await Map.findOne({_id: objectId});
 			const parentRegion = await Region.findOne({_id: objectId});
@@ -107,8 +108,10 @@ module.exports = {
 
 			// look for regions.
 			let region = null;
+			let _id = null;
 			for (let i = 0; i < len; i++) {
-				region = await Region.findOne({_id: _ids[i]});
+				_id = new ObjectId(_ids[i]);
+				region = await Region.findOne({_id: _id});
 				for (let j = 0; j < region.landmarks.length; j++) {
 					arr.push(region.landmarks[j] + ' - ' + region.name);
 				}
