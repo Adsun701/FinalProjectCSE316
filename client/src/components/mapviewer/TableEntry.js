@@ -86,6 +86,12 @@ const TableEntry = (props) => {
                                     handleNameEdit(e);
                                     toggleCapitalEdit(!editingCapital);
                                 }
+                                else if (e.key === 'ArrowUp' && props.index > 0) {
+
+                                }
+                                else if (e.key === 'ArrowDown' && props.index < props.len - 1) {
+
+                                }
                             }}
                         />
                         : <div className="table-text"
@@ -114,6 +120,12 @@ const TableEntry = (props) => {
                             else if (e.key === 'ArrowRight') {
                                 handleCapitalEdit(e);
                                 toggleLeaderEdit(!editingLeader);
+                            }
+                            else if (e.key === 'ArrowUp' && props.index > 0) {
+
+                            }
+                            else if (e.key === 'ArrowDown' && props.index < props.len - 1) {
+
                             }
                         }}
                     />
@@ -144,6 +156,12 @@ const TableEntry = (props) => {
                                 handleLeaderEdit(e);
                                 toggleFlagEdit(!editingFlag);
                             }
+                            else if (e.key === 'ArrowUp' && props.index > 0) {
+
+                            }
+                            else if (e.key === 'ArrowDown' && props.index < props.len - 1) {
+
+                            }
                         }}
                     />
                         : <div className="table-text"
@@ -168,6 +186,12 @@ const TableEntry = (props) => {
                             else if (e.key === 'ArrowLeft') {
                                 handleFlagEdit(e);
                                 toggleLeaderEdit(!editingLeader);
+                            }
+                            else if (e.key === 'ArrowUp' && props.index > 0) {
+
+                            }
+                            else if (e.key === 'ArrowDown' && props.index < props.len - 1) {
+
                             }
                         }}
                     />

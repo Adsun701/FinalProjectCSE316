@@ -1,8 +1,10 @@
-import React        from 'react';
+import React, { useState }        from 'react';
 import TableEntry   from './TableEntry';
 
 const TableContents = (props) => {
     const entries = props && props.regions ? props.regions : [];
+    const [editIndex, setEditIndex] = useState(-1);
+    const [editField, setEditField] = useState('');
     return (
         entries ? <div className=' table-entries container-primary'>
             {
@@ -16,6 +18,9 @@ const TableContents = (props) => {
                         regionViewer={props.regionViewer}
                         goToRegion={props.goToRegion}
                         index={index}
+                        len={entries.length}
+                        editing={editIndex===index ? true : false} setEditIndex={setEditIndex}
+                        editField={editField} setEditField={setEditField}
                     />
                 ))
             }
