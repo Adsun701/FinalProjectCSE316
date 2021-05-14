@@ -26,6 +26,7 @@ const typeDefs = gql `
 		getRegionById(_id: String): Region
 		getRegionsByParent(parentId: String): [Region]
 		getNamesFromAncestry(ancestry: [String]): [String]
+		getLandmarksOfSubregions(_ids: [String]): [String]
 	}
 	extend type Mutation {
 		addRegion(region: RegionInput!, regionId: String!, index: Int!): String

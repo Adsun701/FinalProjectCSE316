@@ -3,17 +3,19 @@ import { WButton, WRow, WCol } from 'wt-frontend';
 const LandmarkEntry = (props) => {
 
     const landmark = props.landmark ? props.landmark : '';
+    const subregionLandmark = props.editable ? 'landmark-table-entry' : 'landmark-table-entry-subregion'
 
     const handleDelete = (landmark) => {
         props.setShowDeleteLandmark(landmark);
     }
 
     return (
-        <WRow className='table-entry'>
+        <WRow className={subregionLandmark + ' table-entry'}>
             <WCol size="1">
-                <WButton className="map-entry-buttons" onClick={() => {handleDelete(landmark);}} wType="texted">
-                    <i className="material-icons">close</i>
-                </WButton>
+                {props.editable &&
+                (<WButton className="map-entry-buttons" onClick={() => {handleDelete(landmark);}} wType="texted">
+                    <i className="delete-landmark-button material-icons">close</i>
+                </WButton>)}
             </WCol>
             <WCol size="4">
                 {

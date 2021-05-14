@@ -92,6 +92,28 @@ module.exports = {
 				arr.push(region.name);
 			}
 			return arr;
+		},
+		/** 
+		 	@param 	 {object} args - an array of subregion _ids.
+			@returns {array} an array of strings (landmarks) on success, an empty array on failure.
+		**/
+		getLandmarksOfSubregions: async (_, args) => {
+			const { _ids } = args;
+			const len = (!_ids) ? -1 : _ids.length;
+			if (len < 1) return [];
+
+			// initialize array;
+			let arr = [];
+
+			// look for regions.
+			let region = null;
+			for (let i = 0; i < len; i++) {
+				region = await Region.findOne({_id: _ids[i]});
+				for (let j = 0; j < region.landmarks.length; j++) {
+					arr.push(region.landmarks[j] + ' - ' + region.name);
+				}
+			}
+			return arr;
 		}
 	},
 	Mutation: {

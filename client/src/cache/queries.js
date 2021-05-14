@@ -60,3 +60,9 @@ export const GET_DB_NAMES_FROM_ANCESTRY = gql`
 		getNamesFromAncestry(ancestry: $ancestry)
 	}
 `;
+
+export const GET_DB_LANDMARKS_OF_SUBREGIONS = gql`
+	query GetDBLandmarksOfSubregions($_ids: [String]) {
+		getLandmarksOfSubregions(_ids: $_ids)
+	}
+`;

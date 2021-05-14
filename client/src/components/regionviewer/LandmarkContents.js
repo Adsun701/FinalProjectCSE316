@@ -1,8 +1,17 @@
 import React        from 'react';
 import LandmarkEntry   from './LandmarkEntry';
+import { GET_DB_LANDMARKS_OF_SUBREGIONS } 				from '../../cache/queries';
+import { useQuery } 		from '@apollo/client';
 
 const LandmarkContents = (props) => {
-    const entries = props && props.region && props.region.landmarks ? props.region.landmarks : [];
+    // get landmarks of subregions.
+    let subregionLandmarks = null;
+    let data = useQuery(GET_DB_LANDMARKS_OF_SUBREGIONS, { variables: {_ids: props.region ? props.region.regions : []} })['data'];
+    if (data) subregionLandmarks = data.getLandmarksOfSubregions;
+    let newEntries = (props.region ? props.region.landmarks : []).concat(subregionLandmarks ? subregionLandmarks : []);
+    newEntries.sort((a, b) => {return a > b});
+
+    const entries = newEntries;
     return (
         entries ? <div className='landmark-container table-entries container-primary'>
             {
@@ -12,6 +21,7 @@ const LandmarkContents = (props) => {
                         key={entry}
                         setShowDeleteLandmark={props.setShowDeleteLandmark}
                         index={index}
+                        editable={entry.includes(' - ') ? false : true}
                     />
                 ))
             }

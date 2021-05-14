@@ -3,7 +3,7 @@ import Logo 							from '../navbar/Logo';
 import NavbarOptions 					from '../navbar/NavbarOptions';
 import UpdateAccount 					from '../modals/Update';
 import DeleteLandmarkInRegion			from '../modals/DeleteLandmark';
-import { GET_DB_MAPS, GET_DB_REGION, GET_DB_REGIONS_BY_PARENT, GET_DB_NAMES_FROM_ANCESTRY } 				from '../../cache/queries';
+import { GET_DB_MAPS, GET_DB_REGION, GET_DB_REGIONS_BY_PARENT, GET_DB_NAMES_FROM_ANCESTRY, GET_DB_LANDMARKS_OF_SUBREGIONS } 				from '../../cache/queries';
 import { useQuery, useMutation } 		from '@apollo/client';
 import * as mutations 								from '../../cache/mutations';
 import { WButton, WRow, WCol, WNavbar, WNavItem } 	from 'wt-frontend';
@@ -67,6 +67,9 @@ const RegionViewer = (props) => {
 	if (data) {
 		newAncestry = data.getNamesFromAncestry;
 	}
+
+	// refetch landmarks function
+	let refetchLandmarks = useQuery(GET_DB_LANDMARKS_OF_SUBREGIONS, { variables: {_ids: newRegionParent ? newRegionParent.regions : []} })['refetch'];
 
 	const region 										= (newRegion ? newRegion : null);
 	const regions 										= (newRegions ? newRegions : []);
@@ -139,12 +142,14 @@ const RegionViewer = (props) => {
 		tpsRedo();
 		updateLandmarkInput('');
 		inputRef.current.value = '';
+		refetchLandmarks();
 	}
 
 	const deleteLandmark = async (landmark, regionId) => {
 		let transaction = new UpdateListLandmarks_Transaction(landmark, regionId, 0, AddLandmark, DeleteLandmark);
 		props.tps.addTransaction(transaction);
 		tpsRedo();
+		refetchLandmarks();
 	}
 
 	/*

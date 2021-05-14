@@ -328,6 +328,20 @@ html, body {
     color: var(--pure-black);
 }
 
+.landmark-table-entry {
+    background-color: var(--pure-black);
+    color: var(--warm-white);
+}
+
+.landmark-table-entry-subregion {
+    background-color: var(--pure-black);
+    color: var(--blue-gray);
+}
+
+.delete-landmark-button {
+    color: var(--pure-red);
+}
+
 .region-navigation-arrows:hover {
     background-color: var(--warm-white);
     color: var(--pure-black);
