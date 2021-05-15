@@ -42,6 +42,17 @@ module.exports = {
 			else return ({});
 		},
 		/** 
+		 	@param 	 {object} req - the request object containing a user id
+			@returns {array} an array of region objects on success, and an empty array on failure
+		**/
+		getAllRegions: async (_, __, { req }) => {
+			const _id = new ObjectId(req.userId);
+			if(!_id) { return([])};
+			const regions = await Region.find({owner: _id});
+			if(regions) return (regions);
+
+		},
+		/** 
 		 	@param 	 {object} args - a parent id
 			@returns {array} an array of regions on success and an empty array on failure
 		**/
@@ -157,7 +168,7 @@ module.exports = {
 		},
 		/** 
 		 	@param 	 {object} args - a map input object, and the _id of the map.
-			@returns {boolean} true on successful update, false on failure
+			@returns {string} new name on successful rename, error message on failure
 		**/
 		renameMap: async (_, args) => {
 			const { map, _id } = args;
@@ -434,6 +445,77 @@ module.exports = {
 			const updated = await Region.updateOne({_id: regionId}, {landmarks: landmarks});
 			if (updated) return index;
 			else return -1;
+		},
+		/** 
+		 	@param 	 {object} args - a region id, a new parent string, and the original parent id.
+			@returns {string} new region parent _id, or error message.
+		**/
+		changeParent: async(_, args) => {
+			const { _id, newParentString, oldParentId } = args;
+
+			// look in maps first.
+			const map = await Map.findOne({name: newParentString});
+			// look in regions next.
+			const region = await Region.findOne({name: newParentString});
+
+			// old map or old region.
+			const oldMap = await Map.findOne({_id: oldParentId});
+			const oldRegion = await Region.findOne({_id: oldParentId});
+
+			let updated = null;
+			let oldMapRegions = null;
+			let oldRegionRegions = null;
+
+			// id of new parent region or map.
+			let newParentId = null;
+
+			// map id of new parent region or map.
+			let newMapId = null;
+
+			// ancestry of new parent region or map.
+			let newAncestry = [];
+			
+
+			if (!map && !region) return "Cannot find parent region or map with specified name.";
+			else if (map) {
+				let regions = map.regions;
+				regions.push(_id);
+				updated = await Map.updateOne({name: newParentString}, {regions: regions});
+				newParentId = map._id;
+				newMapId = map._id;
+				newAncestry = [map._id];
+				if (oldMap) {
+					oldMapRegions = oldMap.regions.filter(regionId => regionId !== _id);
+					updated = await Map.updateOne({_id: oldParentId}, {regions: oldMapRegions});
+				}
+				else {
+					oldRegionRegions = oldRegion.regions.filter(regionId => regionId !== _id);
+					updated = await Region.updateOne({_id: oldParentId}, {regions: oldRegionRegions});
+				}
+			}
+			else {
+				let regions = region.regions;
+				regions.push(_id);
+				updated = await Region.updateOne({name: newParentString}, {regions: regions});
+				newMapId = region.map;
+				newParentId = region._id;
+				newAncestry = region.ancestry;
+				newAncestry.push(newParentId);
+				if (oldMap) {
+					oldMapRegions = oldMap.regions.filter(regionId => regionId !== _id);
+					updated = await Map.updateOne({_id: oldParentId}, {regions: oldMapRegions});
+				}
+				else {
+					oldRegionRegions = oldRegion.regions.filter(regionId => regionId !== _id);
+					updated = await Region.updateOne({_id: oldParentId}, {regions: oldRegionRegions});
+				}
+			}
+			// map, parent, and ancestry variables of region whose parent we are changing,
+			// can potentially change.
+			updated = await Region.updateOne({_id: _id}, {map: newMapId, parent: newParentId, ancestry: newAncestry});
+
+			if (!updated) return "Unable to change parent region.";
+			else return newParentId;
 		}
 	}
 }

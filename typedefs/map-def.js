@@ -24,6 +24,7 @@ const typeDefs = gql `
 		getAllMaps: [Map]
 		getMapById(_id: String!): Map 
 		getRegionById(_id: String): Region
+		getAllRegions: [Region]
 		getRegionsByParent(parentId: String): [Region]
 		getNamesFromAncestry(ancestry: [String]): [String]
 		getLandmarksOfSubregions(_ids: [String]): [String]
@@ -40,6 +41,7 @@ const typeDefs = gql `
 		sortRegions(_id: String!, direction: Int!, state: String!, field: String!): [Region]
 		addLandmark(newLandmark: String!, regionId: String!, index: Int!): Boolean
 		deleteLandmark(landmark: String!, regionId: String!): Int
+		changeParent(_id: String!, newParentString: String!, oldParentId: String!): String
 	}
 	input MapInput {
 		name: String

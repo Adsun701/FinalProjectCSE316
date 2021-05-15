@@ -3,6 +3,7 @@ import Logo 							from '../navbar/Logo';
 import NavbarOptions 					from '../navbar/NavbarOptions';
 import UpdateAccount 					from '../modals/Update';
 import DeleteLandmarkInRegion			from '../modals/DeleteLandmark';
+import NewParent 						from '../modals/NewParent';
 import { GET_DB_MAPS, GET_DB_REGION, GET_DB_REGIONS_BY_PARENT, GET_DB_NAMES_FROM_ANCESTRY, GET_DB_LANDMARKS_OF_SUBREGIONS } 				from '../../cache/queries';
 import { useQuery, useMutation } 		from '@apollo/client';
 import * as mutations 								from '../../cache/mutations';
@@ -54,6 +55,7 @@ const RegionViewer = (props) => {
 			}
 		});
 	}
+	let refetchMaps = useQuery(GET_DB_MAPS)['refetch'];
 	let refetchRegion = useQuery(GET_DB_REGION, {variables: {_id: _id} })['refetch'];
 	let refetchRegions = useQuery(GET_DB_REGIONS_BY_PARENT, { variables: {parentId: _id} })['refetch'];
 
@@ -74,11 +76,12 @@ const RegionViewer = (props) => {
 	const region 										= (newRegion ? newRegion : null);
 	const regions 										= (newRegions ? newRegions : []);
 	const regionsLength 								= (newRegions ? newRegions.length : -1);
-	const index											= regions.findIndex((r) => r._id === _id);
+	const index											= regions.findIndex((r) => r && r._id === _id);
 	const currentRegionId 								= _id;
 	const currentMapId 									= (region && region.map ? region.map : _id);
 	const currentRegionName 							= (region && region.name ? region.name : '');
     const currentParentRegionName                       = (newRegionParent && newRegionParent.name ? newRegionParent.name : '');
+	const currentParentRegionId							= (newRegionParent && newRegionParent._id ? newRegionParent._id : '')
     const currentRegionCapital                          = (region && region.capital ? region.capital : 'N/A');
     const currentRegionLeader                           = (region && region.leader ? region.leader : 'N/A');
     const currentRegionRegions							= (region && region.regions ? region.regions : []);
@@ -86,6 +89,7 @@ const RegionViewer = (props) => {
 	const [currentLandmark, setCurrentLandmark]			= useState('');
     const [showUpdate, toggleShowUpdate]    			= useState(false);
 	const [showDeleteLandmark, toggleShowDeleteLandmark] = useState(false);
+	const [showNewParent, toggleShowNewParent]			= useState(false);
 	const [canUndo, toggleCanUndo]						= useState(props.tps.hasTransactionToUndo() ? true : false);
 	const [canRedo, toggleCanRedo]						= useState(props.tps.hasTransactionToRedo() ? true : false);
 	const [AddLandmark] 								= useMutation(mutations.ADD_LANDMARK);
@@ -160,13 +164,21 @@ const RegionViewer = (props) => {
 
 	const setShowUpdate = async () => {
 		toggleShowDeleteLandmark(false);
+		toggleShowNewParent(false);
 		toggleShowUpdate(!showUpdate);
 	};
 
 	const setShowDeleteLandmark = async (landmark) => {
 		toggleShowUpdate(false);
+		toggleShowNewParent(false);
 		toggleShowDeleteLandmark(!showDeleteLandmark);
 		setCurrentLandmark(landmark);
+	};
+
+	const setShowNewParent = async () => {
+		toggleShowUpdate(false);
+		toggleShowDeleteLandmark(false);
+		toggleShowNewParent(!showNewParent);
 	};
 
 	const navigateToRegion = async(index, length) => {
@@ -236,8 +248,12 @@ const RegionViewer = (props) => {
                             <WCol size='4'>Region Name: {currentRegionName}</WCol>
                         </WRow>
                         <WRow>
-                            <WCol size='4' onClick={() => {history.push("/map/" + region.parent, { _id: region.parent })}}
-                                >Parent Region: <span className='name-of-region-parent'>{currentParentRegionName}</span></WCol>
+                            <WCol size='4'
+                                >Parent Region: <span onClick={() => {history.push("/map/" + region.parent, { _id: region.parent })}} className='name-of-region-parent'>{currentParentRegionName}</span>
+								<WButton className="map-entry-buttons" onClick={() => {setShowNewParent();}} wType="texted">
+									<i className="material-icons">mode_edit</i>
+								</WButton>
+							</WCol>
                         </WRow>
                         <WRow>
                             <WCol size='4'>Region Capital: {currentRegionCapital}</WCol>
@@ -281,6 +297,11 @@ const RegionViewer = (props) => {
 			{
 				showDeleteLandmark && (<DeleteLandmarkInRegion fetchUser={props.fetchUser} setShowDeleteLandmark={setShowDeleteLandmark}
 					currentRegionId={currentRegionId} landmark={currentLandmark} deleteLandmark={deleteLandmark}/>)
+			}
+			{
+				showNewParent && (<NewParent fetchUser={props.fetchUser} setShowNewParent={setShowNewParent}
+					currentRegionId={currentRegionId} currentParentRegionId={currentParentRegionId}
+					refetchMaps={refetchMaps} refetchParent={refetchRegion}/>)
 			}
 
 		</WLayout>

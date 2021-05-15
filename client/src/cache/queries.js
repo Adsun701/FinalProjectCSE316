@@ -38,6 +38,23 @@ export const GET_DB_REGION = gql`
 	}
 `;
 
+export const GET_DB_REGIONS = gql`
+    query GetDBRegions {
+		getAllRegions {
+			_id
+			name
+			capital
+			leader
+			flag
+			landmarks
+			regions
+			parent
+			map
+			ancestry
+		}
+	}
+`;
+
 export const GET_DB_REGIONS_BY_PARENT = gql`
     query GetDBRegionsByParent($parentId: String) {
 		getRegionsByParent(parentId: $parentId) {
