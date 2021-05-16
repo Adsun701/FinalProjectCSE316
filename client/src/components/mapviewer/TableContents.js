@@ -5,6 +5,15 @@ const TableContents = (props) => {
     const entries = props && props.regions ? props.regions : [];
     const [editIndex, setEditIndex] = useState(-1);
     const [editField, setEditField] = useState('');
+    const ancestryFormat = (arr) => {
+        let s = "";
+        for (let i = 0; i < arr.length; i++) {
+            s += arr[i] + '/';
+        }
+        return s;
+    }
+    let ancestry = '../flags/' + ancestryFormat(props.ancestry);
+
     return (
         entries ? <div className=' table-entries container-primary'>
             {
@@ -20,7 +29,8 @@ const TableContents = (props) => {
                         index={index}
                         len={entries.length}
                         editing={editIndex===index ? true : false} setEditIndex={setEditIndex}
-                        editField={editField} setEditField={setEditField}
+                        editField={editField} setEditField={setEditField} flagPath={ancestry + props.currentParentName + '/' + entry.name + " Flag.png"}
+                        parent={props.currentParentName}
                     />
                 ))
             }

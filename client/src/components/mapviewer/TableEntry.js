@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { WButton, WRow, WCol } from 'wt-frontend';
 
 const TableEntry = (props) => {
-
     const region = props.region ? {
         _id: props.region._id,
         name: props.region.name,
@@ -19,7 +18,6 @@ const TableEntry = (props) => {
     const name = region && region.name ? region.name : 'Error';
     const capital = region && region.capital ? region.capital : 'Error';
     const leader = region && region.leader ? region.leader : 'Error';
-    const flag = region && region.flag ? region.flag : 'Error';
     const landmarks = region && region.landmarks ? region.landmarks : [];
     const [editingName, toggleNameEdit] = useState(false);
     const [editingCapital, toggleCapitalEdit] = useState(false);
@@ -54,16 +52,6 @@ const TableEntry = (props) => {
         const prevLeader = leader;
         if (newLeader === prevLeader) return;
         props.editRegion(_id, 'leader', newLeader, prevLeader);
-    };
-
-    const handleFlagEdit = (e) => {
-        props.setEditIndex(-1);
-        props.setEditField('');
-        toggleFlagEdit(false);
-        const newFlag = e.target.value ? e.target.value : 'N/A';
-        const prevFlag = flag;
-        if (newFlag === prevFlag) return;
-        props.editRegion(_id, 'flag', newFlag, prevFlag);
     };
 
     const handleDelete = (_id, region, index) => {
@@ -168,10 +156,6 @@ const TableEntry = (props) => {
                                 handleLeaderEdit(e);
                                 toggleCapitalEdit(!editingCapital);
                             }
-                            else if (e.key === 'ArrowRight') {
-                                handleLeaderEdit(e);
-                                toggleFlagEdit(!editingFlag);
-                            }
                             else if (e.key === 'ArrowUp' && props.index > 0) {
                                 handleLeaderEdit(e);
                                 props.setEditIndex(props.index - 1);
@@ -193,36 +177,9 @@ const TableEntry = (props) => {
 
             <WCol size="2">
                 {
-                    (props.editing && props.editField === 'flag') || editingFlag ? <input
-                        className='table-input' onBlur={handleFlagEdit}
-                        autoFocus={true} defaultValue={flag} type='text'
-                        wType="outlined" barAnimation="solid" inputClass="table-input-class"
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') handleFlagEdit(e);
-                            else if (e.key === 'Escape') {
-                                e.target.value = name;
-                                toggleFlagEdit(false);
-                            }
-                            else if (e.key === 'ArrowLeft') {
-                                handleFlagEdit(e);
-                                toggleLeaderEdit(!editingLeader);
-                            }
-                            else if (e.key === 'ArrowUp' && props.index > 0) {
-                                handleFlagEdit(e);
-                                props.setEditIndex(props.index - 1);
-                                props.setEditField('flag');
-                            }
-                            else if (e.key === 'ArrowDown' && props.index < props.len - 1) {
-                                handleFlagEdit(e);
-                                props.setEditIndex(props.index + 1);
-                                props.setEditField('flag');
-                            }
-                        }}
-                    />
-                        : <div className="table-text"
-                            onClick={() => toggleFlagEdit(!editingFlag)}
-                        >{flag}
-                        </div>
+                    <div className="table-text"
+                        >{<img className="flag" src={props.flagPath} alt={name}></img>}
+                    </div>
                 }
             </WCol>
             <WCol size="3">

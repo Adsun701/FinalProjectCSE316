@@ -255,7 +255,7 @@ const MapViewer = (props) => {
 						editRegion={editRegion}
 						regionViewer={regionViewer}
 						goToRegion={goToRegion}
-						currentParentRegions={currentParentRegions}
+						currentParentRegions={currentParentRegions} ancestry={ancestry} currentParentName={currentParentName}
 					></TableContents>
 				</div>
 			</WLMain>
