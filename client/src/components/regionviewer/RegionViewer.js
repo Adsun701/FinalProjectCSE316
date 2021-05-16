@@ -195,6 +195,23 @@ const RegionViewer = (props) => {
 		history.push("/map/" + regionID, { _id: regionID });
 	}
 
+	const ancestryFormat = (arr) => {
+        let s = "";
+        for (let i = 0; i < arr.length; i++) {
+            s += arr[i] + '/';
+        }
+        return s;
+    }
+    let flagPath = ancestryFormat(ancestry) + currentRegionName + " Flag.png";
+
+	let img = null;
+    try {
+        img = require('../flags/' + flagPath).default;
+    }
+    catch (err) {
+        img = "No Image";
+    }
+
 	return (
 		<WLayout wLayout="header">
 			<WLHeader>
@@ -243,6 +260,9 @@ const RegionViewer = (props) => {
                                     <i className="material-icons" style={{opacity : canRedo ? '1' : '0.5'}}>redo</i>
                                 </WButton>
                             </WCol>
+                        </WRow>
+						<WRow>
+                            <WCol size='6'><img className="flag" src={img} alt={currentRegionName} width="400" height="200"></img></WCol>
                         </WRow>
                         <WRow>
                             <WCol size='4'>Region Name: {currentRegionName}</WCol>
