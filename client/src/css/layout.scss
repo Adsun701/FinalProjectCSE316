@@ -51,6 +51,7 @@ html {
     padding-bottom: 12px;
     padding-top: 12px;
     cursor: pointer;
+    text-align: left;
 }
 
 .table {
@@ -254,4 +255,8 @@ html {
 
 .landmark-input {
     width: 24rem;
+}
+
+.flag-entry {
+    text-align: left;
 }

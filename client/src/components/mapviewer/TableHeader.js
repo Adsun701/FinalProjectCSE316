@@ -36,7 +36,7 @@ const TableHeader = (props) => {
             </WCol>
             <WCol size="2">
                 <WButton onClick={() => {
-                    props.sortRegions(props.currentParentId, props.flagAsc ? 1 : -1, "name");
+                    props.sortRegions(props.currentParentId, props.flagAsc ? 1 : -1, "flag");
                     props.toggleFlagAsc(!props.flagAsc);
                 }
                 } className='table-header-section' wType="texted" >Flag</WButton>

@@ -12,7 +12,7 @@ const TableContents = (props) => {
         }
         return s;
     }
-    let ancestry = '../flags/' + ancestryFormat(props.ancestry);
+    let ancestry = ancestryFormat(props.ancestry);
 
     return (
         entries ? <div className=' table-entries container-primary'>

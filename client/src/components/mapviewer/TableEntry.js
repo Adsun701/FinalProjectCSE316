@@ -22,7 +22,6 @@ const TableEntry = (props) => {
     const [editingName, toggleNameEdit] = useState(false);
     const [editingCapital, toggleCapitalEdit] = useState(false);
     const [editingLeader, toggleLeaderEdit] = useState(false);
-    const [editingFlag, toggleFlagEdit] = useState(false);
 
     const handleNameEdit = (e) => {
         props.setEditIndex(-1);
@@ -56,6 +55,14 @@ const TableEntry = (props) => {
 
     const handleDelete = (_id, region, index) => {
         props.setShowDeleteRegion(_id, region, index);
+    }
+
+    let img = null;
+    try {
+        img = require('../flags/' + props.flagPath).default;
+    }
+    catch (err) {
+        img = "No Image";
     }
 
     return (
@@ -177,8 +184,8 @@ const TableEntry = (props) => {
 
             <WCol size="2">
                 {
-                    <div className="table-text"
-                        >{<img className="flag" src={props.flagPath} alt={name}></img>}
+                    <div className="flag-entry table-text"
+                        >{<img className="flag" src={img} alt={name} width="40" height="20"></img>}
                     </div>
                 }
             </WCol>
