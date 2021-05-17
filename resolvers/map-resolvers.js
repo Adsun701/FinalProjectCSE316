@@ -457,6 +457,7 @@ module.exports = {
 			const map = await Map.findOne({name: newParentString});
 			// look in regions next.
 			const region = await Region.findOne({name: newParentString});
+			if ((map && map._id == _id) || (region && region._id == _id)) return "Unable to change parent region.";
 
 			// old map or old region.
 			const oldMap = await Map.findOne({_id: oldParentId});

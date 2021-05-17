@@ -3,16 +3,13 @@ import { CHANGE_PARENT }			from '../../cache/mutations';
 import { useMutation, useQuery }    	from '@apollo/client';
 
 import { WModal, WMHeader, WMMain, WButton, WInput, WRow, WCol } from 'wt-frontend';
-import { GET_DB_REGIONS, GET_DB_REGIONS_BY_PARENT } from '../../cache/queries';
+import { GET_DB_REGIONS } from '../../cache/queries';
 
 const NewParent = (props) => {
 	const [input, setInput] = useState({newParentString: ''});
 	const [loading, toggleLoading] = useState(false);
 	const [ChangeParent] = useMutation(CHANGE_PARENT);
     let refetchRegions = useQuery(GET_DB_REGIONS)['refetch'];
-    const [oldParent, setOldParent] = useState('');
-
-    let refetchOldParentRegions = useQuery(GET_DB_REGIONS_BY_PARENT, { variables: {parentId: oldParent} })['refetch'];
 
 	const updateInput = (e) => {
 		const { name, value } = e.target;
@@ -26,7 +23,7 @@ const NewParent = (props) => {
             return;
         }
 		let parentString = input['newParentString'];
-        setOldParent(props.currentParentRegionId);
+        props.setOldParent(props.currentParentRegionId);
 		const { loading, error, data } = await ChangeParent({ variables: {_id: props.currentRegionId, newParentString: parentString, oldParentId: props.currentParentRegionId } });
 		if (loading) { toggleLoading(true) };
 		if (error) { return `Error: ${error.message}` };
@@ -40,7 +37,6 @@ const NewParent = (props) => {
                 props.refetchMaps();
                 props.refetchParent();
                 refetchRegions();
-                refetchOldParentRegions();
 			}
 			props.setShowNewParent(false);
 

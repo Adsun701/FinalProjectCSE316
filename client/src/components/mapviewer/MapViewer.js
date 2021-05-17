@@ -167,11 +167,13 @@ const MapViewer = (props) => {
 
 	// Go to region viewer with selected region id.
 	const regionViewer = async (regionID) => {
+		refetchRegions();
 		history.push("/view/" + regionID, { _id: regionID });
 	}
 
 	// go to another region.
 	const goToRegion = async (regionID) => {
+		refetchRegions();
 		history.push("/map/" + regionID, { _id: regionID });
 	}
 	

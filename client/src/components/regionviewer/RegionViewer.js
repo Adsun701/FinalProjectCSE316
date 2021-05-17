@@ -92,10 +92,14 @@ const RegionViewer = (props) => {
 	const [showNewParent, toggleShowNewParent]			= useState(false);
 	const [canUndo, toggleCanUndo]						= useState(props.tps.hasTransactionToUndo() ? true : false);
 	const [canRedo, toggleCanRedo]						= useState(props.tps.hasTransactionToRedo() ? true : false);
+	const [oldParent, setOldParent] 					= useState('');
 	const [AddLandmark] 								= useMutation(mutations.ADD_LANDMARK);
 	const [DeleteLandmark] 								= useMutation(mutations.DELETE_LANDMARK);
 
 	const [landmarkInput, updateLandmarkInput]			= useState('');
+
+	// refetch regions of old parent, so refresh will no longer include moved region.
+	let refetchOldParentRegions = useQuery(GET_DB_REGIONS_BY_PARENT, { variables: {parentId: oldParent} })['refetch'];
 
 	/**
 	const editRegion = async (regionID, field, value, prev) => {
@@ -186,12 +190,14 @@ const RegionViewer = (props) => {
 		if (index < 0 || index >= length) return;
 		else {
 			regionId = regions[index]._id;
+			refetchOldParentRegions();
 			history.push("/view/" + regionId, { _id: regionId });
 		}
 	}
 
 	// go to another region.
 	const goToRegion = async (regionID) => {
+		refetchOldParentRegions();
 		history.push("/map/" + regionID, { _id: regionID });
 	}
 
@@ -218,7 +224,7 @@ const RegionViewer = (props) => {
 				<WNavbar color="colored">
 					<ul>
 						<WNavItem>
-							<Logo className='logo' tpsReset={tpsReset}/>
+							<Logo className='logo' tpsReset={tpsReset} refetchOldParentRegions={refetchOldParentRegions}/>
 						</WNavItem>
 					</ul>
 					<ul>
@@ -269,7 +275,7 @@ const RegionViewer = (props) => {
                         </WRow>
                         <WRow>
                             <WCol size='4'
-                                >Parent Region: <span onClick={() => {history.push("/map/" + region.parent, { _id: region.parent })}} className='name-of-region-parent'>{currentParentRegionName}</span>
+                                >Parent Region: <span onClick={() => {refetchOldParentRegions(); history.push("/map/" + region.parent, { _id: region.parent })}} className='name-of-region-parent'>{currentParentRegionName}</span>
 								<WButton className="map-entry-buttons" onClick={() => {setShowNewParent();}} wType="texted">
 									<i className="material-icons">mode_edit</i>
 								</WButton>
@@ -321,7 +327,7 @@ const RegionViewer = (props) => {
 			{
 				showNewParent && (<NewParent fetchUser={props.fetchUser} setShowNewParent={setShowNewParent}
 					currentRegionId={currentRegionId} currentParentRegionId={currentParentRegionId}
-					refetchMaps={refetchMaps} refetchParent={refetchRegion}/>)
+					refetchMaps={refetchMaps} refetchParent={refetchRegion} setOldParent={setOldParent}/>)
 			}
 
 		</WLayout>
